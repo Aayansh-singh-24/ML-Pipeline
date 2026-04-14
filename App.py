@@ -7,7 +7,6 @@ from plotly.subplots import make_subplots
 import warnings
 warnings.filterwarnings('ignore')
 
-# ─── Page Config ───────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="ML Pipeline Studio",
     page_icon="⚗️",
@@ -15,38 +14,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# ─── Custom CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600;700&family=Orbitron:wght@700;900&display=swap');
 
 :root {
-    --bg-primary: #0a0e1a;
-    --bg-secondary: #0f1629;
-    --bg-card: #141b2d;
-    --bg-card-hover: #1a2240;
-    --accent-cyan: #00d4ff;
-    --accent-purple: #8b5cf6;
-    --accent-pink: #f472b6;
-    --accent-green: #10b981;
-    --accent-orange: #f59e0b;
-    --text-primary: #e2e8f0;
-    --text-secondary: #94a3b8;
-    --text-muted: #475569;
-    --border: #1e2d4a;
-    --border-bright: #2d4070;
-    --step-active: #00d4ff;
-    --step-done: #10b981;
-    --step-pending: #334155;
+    --accent-cyan: #0099cc;
+    --accent-purple: #7c3aed;
+    --accent-pink: #db2777;
+    --accent-green: #059669;
+    --accent-orange: #d97706;
 }
 
 * { font-family: 'DM Sans', sans-serif; }
 
 .stApp {
-    background: var(--bg-primary) !important;
-    background-image: 
-        radial-gradient(ellipse at 20% 0%, rgba(0,212,255,0.06) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 100%, rgba(139,92,246,0.06) 0%, transparent 50%) !important;
+    background-color: #f8fafc !important;
 }
 
 .main .block-container {
@@ -58,25 +41,20 @@ st.markdown("""
 .hero-header {
     text-align: center;
     padding: 2rem 0 1rem;
-    position: relative;
 }
 .hero-title {
     font-family: 'Orbitron', monospace;
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     font-weight: 900;
-    background: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #f472b6 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #0099cc;
     letter-spacing: 0.05em;
     margin: 0;
-    text-shadow: none;
 }
 .hero-sub {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
+    color: #475569;
+    font-size: 0.9rem;
     font-weight: 400;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
     margin-top: 0.4rem;
     font-family: 'Space Mono', monospace;
@@ -91,6 +69,10 @@ st.markdown("""
     padding: 1.5rem 0;
     overflow-x: auto;
     flex-wrap: nowrap;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e2e8f0;
+    margin-bottom: 1rem;
 }
 .step-item {
     display: flex;
@@ -111,7 +93,7 @@ st.markdown("""
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.1rem;
+    font-size: 1rem;
     font-weight: 700;
     border: 2px solid;
     transition: all 0.3s ease;
@@ -119,24 +101,23 @@ st.markdown("""
     z-index: 2;
 }
 .step-circle.pending {
-    background: var(--bg-card);
-    border-color: var(--step-pending);
-    color: var(--text-muted);
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #94a3b8;
 }
 .step-circle.active {
-    background: rgba(0,212,255,0.15);
-    border-color: var(--accent-cyan);
-    color: var(--accent-cyan);
-    box-shadow: 0 0 20px rgba(0,212,255,0.4);
+    background: #e0f7ff;
+    border-color: #0099cc;
+    color: #0099cc;
+    box-shadow: 0 0 0 4px rgba(0,153,204,0.15);
 }
 .step-circle.done {
-    background: rgba(16,185,129,0.15);
-    border-color: var(--accent-green);
-    color: var(--accent-green);
-    box-shadow: 0 0 12px rgba(16,185,129,0.3);
+    background: #d1fae5;
+    border-color: #059669;
+    color: #059669;
 }
 .step-label {
-    font-size: 0.65rem;
+    font-size: 0.62rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-top: 6px;
@@ -145,25 +126,25 @@ st.markdown("""
     line-height: 1.2;
     font-family: 'Space Mono', monospace;
 }
-.step-label.pending { color: var(--text-muted); }
-.step-label.active { color: var(--accent-cyan); font-weight: 700; }
-.step-label.done { color: var(--accent-green); }
+.step-label.pending { color: #94a3b8; }
+.step-label.active { color: #0099cc; font-weight: 700; }
+.step-label.done { color: #059669; }
 
 .step-connector {
     height: 2px;
-    width: 50px;
+    width: 40px;
     margin-bottom: 22px;
     flex-shrink: 0;
 }
-.step-connector.done { background: var(--accent-green); }
-.step-connector.active { background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan)); }
-.step-connector.pending { background: var(--step-pending); }
+.step-connector.done { background: #059669; }
+.step-connector.active { background: linear-gradient(90deg, #059669, #0099cc); }
+.step-connector.pending { background: #e2e8f0; }
 
 /* Section Cards */
 .section-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
     padding: 1.5rem;
     margin-bottom: 1rem;
     position: relative;
@@ -173,16 +154,16 @@ st.markdown("""
     content: '';
     position: absolute;
     top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    height: 3px;
+    background: linear-gradient(90deg, #0099cc, #7c3aed);
 }
 .section-title {
-    font-family: 'Orbitron', monospace;
-    font-size: 0.9rem;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
     font-weight: 700;
-    letter-spacing: 0.15em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--accent-cyan);
+    color: #0099cc;
     display: flex;
     align-items: center;
     gap: 0.6rem;
@@ -197,81 +178,235 @@ st.markdown("""
     margin: 1rem 0;
 }
 .metric-card {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
-    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
     padding: 1rem;
     text-align: center;
     transition: border-color 0.2s;
 }
-.metric-card:hover { border-color: var(--accent-cyan); }
+.metric-card:hover { border-color: #0099cc; }
 .metric-value {
     font-family: 'Orbitron', monospace;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--accent-cyan);
+    color: #0099cc;
     display: block;
 }
 .metric-label {
-    font-size: 0.72rem;
-    color: var(--text-secondary);
+    font-size: 0.7rem;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.1em;
     margin-top: 0.3rem;
     font-family: 'Space Mono', monospace;
 }
 
-/* Buttons */
+/* ─── BUTTONS ─── */
 .stButton > button {
-    background: linear-gradient(135deg, rgba(0,212,255,0.1), rgba(139,92,246,0.1)) !important;
-    border: 1px solid var(--accent-cyan) !important;
-    color: var(--accent-cyan) !important;
+    background: #ffffff !important;
+    border: 1.5px solid #0099cc !important;
+    color: #0099cc !important;
     border-radius: 8px !important;
     font-family: 'Space Mono', monospace !important;
     font-size: 0.8rem !important;
-    letter-spacing: 0.05em !important;
+    letter-spacing: 0.04em !important;
     font-weight: 700 !important;
     transition: all 0.2s !important;
     padding: 0.5rem 1.5rem !important;
 }
 .stButton > button:hover {
-    background: rgba(0,212,255,0.2) !important;
-    box-shadow: 0 0 20px rgba(0,212,255,0.3) !important;
-    transform: translateY(-1px) !important;
+    background: #e0f7ff !important;
+    box-shadow: 0 0 0 3px rgba(0,153,204,0.15) !important;
 }
 .stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple)) !important;
-    color: #000 !important;
-    border: none !important;
-    font-weight: 900 !important;
+    background: #0099cc !important;
+    color: #ffffff !important;
+    border-color: #0099cc !important;
+    font-weight: 700 !important;
+}
+.stButton > button[kind="primary"]:hover {
+    background: #007aab !important;
+    border-color: #007aab !important;
 }
 
-/* Inputs */
-.stSelectbox > div > div, .stMultiSelect > div > div,
-.stNumberInput > div > div > input, .stTextInput > div > div > input {
-    background: var(--bg-secondary) !important;
-    border: 1px solid var(--border-bright) !important;
-    color: var(--text-primary) !important;
+/* ─── SELECTBOX ─── */
+.stSelectbox > div > div {
+    background: #ffffff !important;
+    border: 1.5px solid #94a3b8 !important;
+    border-radius: 8px !important;
+    color: #1e293b !important;
+}
+.stSelectbox > div > div > div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    color: #1e293b !important;
+}
+.stSelectbox span,
+.stSelectbox div[class*="ValueContainer"] span,
+.stSelectbox div[class*="singleValue"] {
+    color: #1e293b !important;
+    font-size: 0.9rem !important;
+}
+.stSelectbox svg {
+    fill: #1e293b !important;
+    color: #1e293b !important;
+}
+div[data-baseweb="popover"] ul,
+div[data-baseweb="menu"] {
+    background: #ffffff !important;
+    border: 1.5px solid #94a3b8 !important;
     border-radius: 8px !important;
 }
-.stSelectbox label, .stMultiSelect label, .stNumberInput label,
-.stTextInput label, .stSlider label, .stRadio label {
-    color: var(--text-secondary) !important;
-    font-size: 0.82rem !important;
-    font-family: 'Space Mono', monospace !important;
-    letter-spacing: 0.05em !important;
-    text-transform: uppercase !important;
+div[data-baseweb="popover"] li,
+div[data-baseweb="menu"] li {
+    color: #1e293b !important;
+    background: #ffffff !important;
+    font-size: 0.9rem !important;
+}
+div[data-baseweb="popover"] li:hover,
+div[data-baseweb="menu"] li:hover {
+    background: #e0f7ff !important;
+    color: #0c4a6e !important;
+}
+div[data-baseweb="popover"] li[aria-selected="true"],
+div[data-baseweb="menu"] li[aria-selected="true"] {
+    background: #e0f7ff !important;
+    color: #0c4a6e !important;
+    font-weight: 700 !important;
 }
 
-/* Radio buttons */
+/* ─── MULTISELECT ─── */
+.stMultiSelect > div > div {
+    background: #ffffff !important;
+    border: 1.5px solid #94a3b8 !important;
+    border-radius: 8px !important;
+    color: #1e293b !important;
+    min-height: 42px !important;
+}
+.stMultiSelect div[class*="placeholder"],
+.stMultiSelect div[class*="Placeholder"] {
+    color: #64748b !important;
+    font-size: 0.9rem !important;
+}
+.stMultiSelect span[data-baseweb="tag"],
+.stMultiSelect div[data-baseweb="tag"] {
+    background: #e0f7ff !important;
+    color: #0c4a6e !important;
+    border: 1px solid #7dd3f0 !important;
+    border-radius: 6px !important;
+    font-size: 0.82rem !important;
+}
+.stMultiSelect span[data-baseweb="tag"] svg,
+.stMultiSelect div[data-baseweb="tag"] svg {
+    fill: #0c4a6e !important;
+}
+.stMultiSelect input {
+    color: #1e293b !important;
+    background: transparent !important;
+}
+.stMultiSelect svg {
+    fill: #1e293b !important;
+}
+
+/* ─── NUMBER INPUT ─── */
+.stNumberInput > div > div > input {
+    background: #ffffff !important;
+    border: 1.5px solid #94a3b8 !important;
+    color: #1e293b !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+}
+.stNumberInput > div > div > input:focus {
+    border-color: #0099cc !important;
+    box-shadow: 0 0 0 3px rgba(0,153,204,0.12) !important;
+}
+.stNumberInput button {
+    background: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
+    color: #1e293b !important;
+}
+.stNumberInput button:hover {
+    background: #e0f7ff !important;
+    color: #0099cc !important;
+}
+
+/* ─── TEXT INPUT ─── */
+.stTextInput > div > div > input {
+    background: #ffffff !important;
+    border: 1.5px solid #94a3b8 !important;
+    color: #1e293b !important;
+    border-radius: 8px !important;
+    font-size: 0.9rem !important;
+}
+.stTextInput > div > div > input:focus {
+    border-color: #0099cc !important;
+    box-shadow: 0 0 0 3px rgba(0,153,204,0.12) !important;
+}
+.stTextInput > div > div > input::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* ─── LABELS ─── */
+.stSelectbox label,
+.stMultiSelect label,
+.stNumberInput label,
+.stTextInput label,
+.stSlider label,
+.stRadio label,
+.stCheckbox label,
+.stFileUploader label {
+    color: #334155 !important;
+    font-size: 0.82rem !important;
+    font-family: 'Space Mono', monospace !important;
+    letter-spacing: 0.04em !important;
+    text-transform: uppercase !important;
+    font-weight: 700 !important;
+}
+
+/* ─── CHECKBOX ─── */
+.stCheckbox > label {
+    color: #1e293b !important;
+    font-size: 0.88rem !important;
+    font-weight: 400 !important;
+    text-transform: none !important;
+    letter-spacing: normal !important;
+    font-family: 'DM Sans', sans-serif !important;
+}
+.stCheckbox > label > span {
+    color: #1e293b !important;
+}
+.stCheckbox input[type="checkbox"] + div {
+    border-color: #94a3b8 !important;
+    background: #ffffff !important;
+}
+.stCheckbox input[type="checkbox"]:checked + div {
+    background: #0099cc !important;
+    border-color: #0099cc !important;
+}
+
+/* ─── SLIDER ─── */
+.stSlider > div > div > div > div {
+    background: #0099cc !important;
+}
+.stSlider > div > div > div {
+    background: #cbd5e1 !important;
+}
+.stSlider > div > div > div > div > div {
+    color: #1e293b !important;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
+}
+
+/* ─── RADIO BUTTONS ─── */
 .stRadio > div {
     display: flex !important;
-    gap: 1rem !important;
+    gap: 0.75rem !important;
     flex-direction: row !important;
+    flex-wrap: wrap !important;
 }
 .stRadio > div > label {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border-bright) !important;
+    background: #f8fafc !important;
+    border: 1.5px solid #94a3b8 !important;
     border-radius: 8px !important;
     padding: 0.5rem 1.2rem !important;
     cursor: pointer !important;
@@ -280,77 +415,141 @@ st.markdown("""
     font-size: 0.9rem !important;
     font-family: 'DM Sans', sans-serif !important;
     letter-spacing: normal !important;
+    color: #1e293b !important;
+    font-weight: 400 !important;
+}
+.stRadio > div > label:hover {
+    background: #e0f7ff !important;
+    border-color: #0099cc !important;
+    color: #0c4a6e !important;
+}
+.stRadio > div > label > div > p {
+    color: #1e293b !important;
+    font-size: 0.9rem !important;
 }
 
-/* File uploader */
+/* ─── FILE UPLOADER ─── */
 .stFileUploader > div {
-    background: var(--bg-card) !important;
-    border: 1px dashed var(--border-bright) !important;
+    background: #f8fafc !important;
+    border: 1.5px dashed #94a3b8 !important;
     border-radius: 12px !important;
 }
+.stFileUploader > div > div {
+    color: #334155 !important;
+}
+.stFileUploader small, .stFileUploader p {
+    color: #475569 !important;
+}
 
-/* Tabs */
+/* ─── TABS ─── */
 .stTabs [data-baseweb="tab-list"] {
-    background: var(--bg-secondary) !important;
+    background: #f1f5f9 !important;
     border-radius: 10px !important;
     padding: 4px !important;
     gap: 4px !important;
 }
 .stTabs [data-baseweb="tab"] {
     background: transparent !important;
-    color: var(--text-secondary) !important;
+    color: #475569 !important;
     border-radius: 8px !important;
     font-family: 'Space Mono', monospace !important;
-    font-size: 0.75rem !important;
-    letter-spacing: 0.05em !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.04em !important;
     text-transform: uppercase !important;
     padding: 0.5rem 1rem !important;
 }
 .stTabs [aria-selected="true"] {
-    background: var(--bg-card) !important;
-    color: var(--accent-cyan) !important;
+    background: #ffffff !important;
+    color: #0099cc !important;
+    font-weight: 700 !important;
+}
+.stTabs [data-baseweb="tab-panel"] {
+    color: #1e293b !important;
 }
 
-/* Expanders */
+/* ─── EXPANDERS ─── */
 .streamlit-expanderHeader {
-    background: var(--bg-card) !important;
-    border: 1px solid var(--border) !important;
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
     border-radius: 8px !important;
-    color: var(--text-primary) !important;
+    color: #1e293b !important;
     font-family: 'Space Mono', monospace !important;
     font-size: 0.8rem !important;
 }
+.streamlit-expanderHeader:hover {
+    border-color: #0099cc !important;
+    color: #0099cc !important;
+}
 .streamlit-expanderContent {
-    background: var(--bg-secondary) !important;
-    border: 1px solid var(--border) !important;
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
     border-top: none !important;
 }
+.streamlit-expanderHeader svg {
+    fill: #475569 !important;
+    color: #475569 !important;
+}
 
-/* Dataframe */
+/* ─── DATAFRAME ─── */
 .stDataFrame { border-radius: 8px !important; overflow: hidden !important; }
+.stDataFrame th {
+    background: #f1f5f9 !important;
+    color: #1e293b !important;
+    font-weight: 700 !important;
+}
+.stDataFrame td {
+    color: #1e293b !important;
+}
 
-/* Alerts */
-.stSuccess { background: rgba(16,185,129,0.1) !important; border: 1px solid var(--accent-green) !important; border-radius: 8px !important; color: var(--accent-green) !important; }
-.stWarning { background: rgba(245,158,11,0.1) !important; border: 1px solid var(--accent-orange) !important; border-radius: 8px !important; }
-.stError { background: rgba(244,114,182,0.1) !important; border: 1px solid var(--accent-pink) !important; border-radius: 8px !important; }
-.stInfo { background: rgba(0,212,255,0.07) !important; border: 1px solid rgba(0,212,255,0.3) !important; border-radius: 8px !important; color: var(--text-primary) !important; }
+/* ─── ALERTS ─── */
+.stSuccess > div {
+    background: #d1fae5 !important;
+    border: 1px solid #059669 !important;
+    border-radius: 8px !important;
+    color: #064e3b !important;
+}
+.stWarning > div {
+    background: #fef3c7 !important;
+    border: 1px solid #d97706 !important;
+    border-radius: 8px !important;
+    color: #78350f !important;
+}
+.stError > div {
+    background: #fee2e2 !important;
+    border: 1px solid #dc2626 !important;
+    border-radius: 8px !important;
+    color: #7f1d1d !important;
+}
+.stInfo > div {
+    background: #e0f7ff !important;
+    border: 1px solid #0099cc !important;
+    border-radius: 8px !important;
+    color: #0c4a6e !important;
+}
+.stSuccess p, .stSuccess div[data-testid="stMarkdownContainer"] { color: #064e3b !important; }
+.stWarning p, .stWarning div[data-testid="stMarkdownContainer"] { color: #78350f !important; }
+.stError p, .stError div[data-testid="stMarkdownContainer"] { color: #7f1d1d !important; }
+.stInfo p, .stInfo div[data-testid="stMarkdownContainer"] { color: #0c4a6e !important; }
 
-/* Progress bar */
-.stProgress > div > div > div { background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple)) !important; }
+/* ─── SPINNER ─── */
+.stSpinner > div { border-top-color: #0099cc !important; }
 
-/* Divider */
-hr { border-color: var(--border) !important; }
+/* ─── PROGRESS BAR ─── */
+.stProgress > div > div > div {
+    background: linear-gradient(90deg, #0099cc, #7c3aed) !important;
+}
+.stProgress > div > div { background: #e2e8f0 !important; }
 
-/* Scrollbar */
+hr { border-color: #e2e8f0 !important; }
+
 ::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: var(--border-bright); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-cyan); }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #0099cc; }
 
-/* Tag Badges */
 .badge {
     display: inline-block;
-    padding: 2px 10px;
+    padding: 3px 10px;
     border-radius: 20px;
     font-size: 0.7rem;
     font-family: 'Space Mono', monospace;
@@ -360,12 +559,11 @@ hr { border-color: var(--border) !important; }
     vertical-align: middle;
     margin-left: 8px;
 }
-.badge-cyan { background: rgba(0,212,255,0.15); color: var(--accent-cyan); border: 1px solid rgba(0,212,255,0.3); }
-.badge-green { background: rgba(16,185,129,0.15); color: var(--accent-green); border: 1px solid rgba(16,185,129,0.3); }
-.badge-purple { background: rgba(139,92,246,0.15); color: var(--accent-purple); border: 1px solid rgba(139,92,246,0.3); }
-.badge-orange { background: rgba(245,158,11,0.15); color: var(--accent-orange); border: 1px solid rgba(245,158,11,0.3); }
+.badge-cyan { background: #e0f7ff; color: #0c4a6e; border: 1px solid #7dd3f0; }
+.badge-green { background: #d1fae5; color: #064e3b; border: 1px solid #6ee7b7; }
+.badge-purple { background: #ede9fe; color: #4c1d95; border: 1px solid #c4b5fd; }
+.badge-orange { background: #fef3c7; color: #78350f; border: 1px solid #fcd34d; }
 
-/* Stat row */
 .stat-row {
     display: flex;
     gap: 0.8rem;
@@ -373,40 +571,82 @@ hr { border-color: var(--border) !important; }
     margin: 0.8rem 0;
 }
 .stat-pill {
-    background: var(--bg-secondary);
-    border: 1px solid var(--border);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     padding: 0.4rem 0.9rem;
     font-size: 0.8rem;
-    color: var(--text-secondary);
+    color: #475569;
     font-family: 'Space Mono', monospace;
 }
-.stat-pill span { color: var(--accent-cyan); font-weight: 700; }
+.stat-pill span { color: #0099cc; font-weight: 700; }
 
-h1, h2, h3 { color: var(--text-primary) !important; }
-p, li { color: var(--text-secondary) !important; }
+h1, h2, h3 { color: #1e293b !important; }
+p, li { color: #475569 !important; }
 
 .step-header-large {
     font-family: 'Orbitron', monospace;
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 900;
-    color: var(--text-primary);
+    color: #1e293b;
     margin: 0;
 }
 .step-number-badge {
-    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
     font-family: 'Orbitron', monospace;
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 900;
     line-height: 1;
+    color: #0099cc;
+    opacity: 0.4;
 }
+
+.highlight-box {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #0099cc;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 0.8rem 0;
+}
+.highlight-box-warn {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #d97706;
+    border-radius: 0 8px 8px 0;
+    padding: 1rem 1.25rem;
+    margin: 0.8rem 0;
+}
+
+div[data-testid="stMarkdownContainer"] p { color: #334155 !important; }
+div[data-testid="stMarkdownContainer"] li { color: #334155 !important; }
+div[data-testid="InputInstructions"],
+.stCaption, small { color: #64748b !important; font-size: 0.78rem !important; }
+div[data-testid="stMetric"] label { color: #475569 !important; }
+div[data-testid="stMetric"] div[data-testid="stMetricValue"] { color: #1e293b !important; }
+div[data-testid="stMetric"] div[data-testid="stMetricDelta"] { color: #059669 !important; }
 </style>
 """, unsafe_allow_html=True)
 
 
-# ─── Session State Init ────────────────────────────────────────────────────────
+PLOT_COLORS = ['#0099cc', '#7c3aed', '#db2777', '#059669', '#d97706',
+               '#2563eb', '#dc2626', '#0d9488', '#7c3aed', '#ea580c']
+
+def plot_layout(title="", height=None):
+    layout = dict(
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='#f8fafc',
+        font=dict(color='#475569', family='DM Sans', size=12),
+        title=dict(text=title, font=dict(color='#1e293b', size=14), x=0),
+        xaxis=dict(gridcolor='#e2e8f0', linecolor='#e2e8f0', zerolinecolor='#e2e8f0'),
+        yaxis=dict(gridcolor='#e2e8f0', linecolor='#e2e8f0', zerolinecolor='#e2e8f0'),
+        legend=dict(bgcolor='rgba(0,0,0,0)', font=dict(color='#475569')),
+        margin=dict(l=0, r=0, t=40, b=0),
+    )
+    if height:
+        layout['height'] = height
+    return layout
+
+
 def init_state():
     defaults = {
         'step': 0,
@@ -443,11 +683,10 @@ STEPS = [
     ("🤖", "Model\nSelection"),
     ("📊", "Training\n& KFold"),
     ("📈", "Metrics"),
-    ("🎛️", "Hyperparameter\nTuning"),
+    ("🎛️", "HP\nTuning"),
 ]
 
 
-# ─── Pipeline Progress Bar ─────────────────────────────────────────────────────
 def render_pipeline_bar():
     current = st.session_state.step
     html = '<div class="pipeline-bar">'
@@ -475,7 +714,6 @@ def render_pipeline_bar():
         html += '</div>'
     html += '</div>'
     st.markdown(html, unsafe_allow_html=True)
-    st.markdown('<hr style="margin:0 0 1.5rem 0;">', unsafe_allow_html=True)
 
 
 def section_card(title, icon=""):
@@ -493,14 +731,13 @@ def nav_buttons(back=True, next_label="Continue →", next_key=None):
         return st.button(next_label, key=next_key or f"next_{st.session_state.step}", type="primary")
 
 
-# ─── STEP 0: Problem Type ──────────────────────────────────────────────────────
 def step_problem_type():
     st.markdown("""
     <div style="text-align:center; padding: 1rem 0 2rem;">
         <div class="step-number-badge">01</div>
-        <div class="step-header-large">Problem Type</div>
-        <p style="color: #64748b; margin-top:0.5rem; font-family:'Space Mono',monospace; font-size:0.8rem; letter-spacing:0.1em;">
-            SELECT THE MACHINE LEARNING TASK
+        <div class="step-header-large">Choose Problem Type</div>
+        <p style="color: #64748b; margin-top:0.5rem; font-family:'Space Mono',monospace; font-size:0.78rem; letter-spacing:0.1em;">
+            SELECT YOUR MACHINE LEARNING TASK
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -508,11 +745,10 @@ def step_problem_type():
     col1, col2 = st.columns(2, gap="large")
     with col1:
         st.markdown("""
-        <div style="background:#141b2d; border:2px solid #1e2d4a; border-radius:16px; padding:2rem; text-align:center; cursor:pointer; transition:all 0.3s;" 
-             onmouseover="this.style.borderColor='#00d4ff'" onmouseout="this.style.borderColor='#1e2d4a'">
-            <div style="font-size:3rem; margin-bottom:1rem;">🎯</div>
-            <div style="font-family:'Orbitron',monospace; font-size:1.1rem; color:#e2e8f0; font-weight:700;">Classification</div>
-            <p style="color:#64748b; font-size:0.82rem; margin-top:0.5rem; line-height:1.5;">
+        <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; padding:2rem; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:1rem;">🎯</div>
+            <div style="font-family:'Orbitron',monospace; font-size:1.05rem; color:#1e293b; font-weight:700;">Classification</div>
+            <p style="color:#64748b; font-size:0.82rem; margin-top:0.5rem; line-height:1.6;">
                 Predict discrete categories or labels.<br>Binary, multi-class, or multi-label tasks.
             </p>
             <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
@@ -522,6 +758,7 @@ def step_problem_type():
             </div>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
         if st.button("Select Classification", key="cls_btn", use_container_width=True):
             st.session_state.problem_type = "Classification"
             st.session_state.step = 1
@@ -529,10 +766,10 @@ def step_problem_type():
 
     with col2:
         st.markdown("""
-        <div style="background:#141b2d; border:2px solid #1e2d4a; border-radius:16px; padding:2rem; text-align:center;">
-            <div style="font-size:3rem; margin-bottom:1rem;">📈</div>
-            <div style="font-family:'Orbitron',monospace; font-size:1.1rem; color:#e2e8f0; font-weight:700;">Regression</div>
-            <p style="color:#64748b; font-size:0.82rem; margin-top:0.5rem; line-height:1.5;">
+        <div style="background:#ffffff; border:2px solid #e2e8f0; border-radius:16px; padding:2rem; text-align:center;">
+            <div style="font-size:2.5rem; margin-bottom:1rem;">📈</div>
+            <div style="font-family:'Orbitron',monospace; font-size:1.05rem; color:#1e293b; font-weight:700;">Regression</div>
+            <p style="color:#64748b; font-size:0.82rem; margin-top:0.5rem; line-height:1.6;">
                 Predict continuous numerical values.<br>Linear, polynomial, or non-linear relationships.
             </p>
             <div style="margin-top:1rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap;">
@@ -542,20 +779,21 @@ def step_problem_type():
             </div>
         </div>
         """, unsafe_allow_html=True)
+        st.markdown("<div style='height:0.5rem;'></div>", unsafe_allow_html=True)
         if st.button("Select Regression", key="reg_btn", use_container_width=True):
             st.session_state.problem_type = "Regression"
             st.session_state.step = 1
             st.rerun()
 
 
-# ─── STEP 1: Data Input ────────────────────────────────────────────────────────
 def step_data_input():
+    pt_badge = 'badge-cyan' if st.session_state.problem_type == 'Classification' else 'badge-orange'
     st.markdown(f"""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
         <div class="step-number-badge">02</div>
         <div>
             <div class="step-header-large">Data Input</div>
-            <span class="badge badge-{'cyan' if st.session_state.problem_type=='Classification' else 'orange'}">{st.session_state.problem_type}</span>
+            <span class="badge {pt_badge}">{st.session_state.problem_type}</span>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -570,7 +808,7 @@ def step_data_input():
             st.success(f"✓ Loaded {df.shape[0]:,} rows × {df.shape[1]} columns")
 
     with tab2:
-        st.markdown('<div style="color:#94a3b8; font-size:0.85rem; margin-bottom:1rem;">Load a built-in dataset to explore the pipeline:</div>', unsafe_allow_html=True)
+        st.markdown('<p style="font-size:0.85rem; margin-bottom:1rem; color:#334155;">Load a built-in dataset to explore the pipeline:</p>', unsafe_allow_html=True)
         col_a, col_b, col_c = st.columns(3)
         with col_a:
             if st.button("🌸 Iris (Classification)", use_container_width=True):
@@ -580,7 +818,7 @@ def step_data_input():
                 st.session_state.problem_type = "Classification"
                 st.rerun()
         with col_b:
-            if st.button("🏠 Boston Housing (Regression)", use_container_width=True):
+            if st.button("🏠 California Housing (Regression)", use_container_width=True):
                 from sklearn.datasets import fetch_california_housing
                 d = fetch_california_housing(as_frame=True)
                 st.session_state.df = pd.concat([d.data, d.target.rename("target")], axis=1)
@@ -598,7 +836,6 @@ def step_data_input():
         df = st.session_state.df
         st.markdown('<hr style="margin:1rem 0;">', unsafe_allow_html=True)
 
-        # Stats row
         numeric_cols = df.select_dtypes(include=np.number).columns.tolist()
         cat_cols = df.select_dtypes(exclude=np.number).columns.tolist()
         missing = df.isnull().sum().sum()
@@ -615,11 +852,9 @@ def step_data_input():
         with st.expander("📋 Preview Data (first 10 rows)"):
             st.dataframe(df.head(10), use_container_width=True)
 
-        # Target selection
         st.markdown('<div style="margin-top:1.2rem;"></div>', unsafe_allow_html=True)
         section_card("Select Target Feature", "🎯")
-        target = st.selectbox("Target column", df.columns.tolist(),
-                               index=len(df.columns)-1)
+        target = st.selectbox("Target column", df.columns.tolist(), index=len(df.columns)-1)
         st.session_state.target = target
 
         feature_cols = [c for c in df.columns if c != target]
@@ -628,7 +863,6 @@ def step_data_input():
         st.session_state.selected_features = sel_features
 
         if sel_features:
-            # PCA Visualization
             section_card("Data Shape — PCA Projection", "🔮")
             from sklearn.preprocessing import StandardScaler
             from sklearn.decomposition import PCA
@@ -652,42 +886,25 @@ def step_data_input():
                         fig = px.scatter_3d(pca_df, x="PC1", y="PC2", z="PC3",
                                             color="target", opacity=0.8,
                                             title="PCA — 3D Projection",
-                                            color_discrete_sequence=px.colors.qualitative.Bold)
+                                            color_discrete_sequence=PLOT_COLORS)
                     else:
                         fig = px.scatter(pca_df, x="PC1", y="PC2", color="target",
                                          title="PCA — 2D Projection", opacity=0.8,
-                                         color_discrete_sequence=px.colors.qualitative.Bold)
-                    fig.update_layout(
-                        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(10,14,26,0.8)',
-                        font=dict(color='#94a3b8', family='DM Sans'),
-                        title_font=dict(color='#e2e8f0', size=14),
-                        legend=dict(bgcolor='rgba(0,0,0,0)'),
-                        margin=dict(l=0, r=0, t=40, b=0)
-                    )
+                                         color_discrete_sequence=PLOT_COLORS)
+                    fig.update_layout(**plot_layout("PCA Projection"))
                     st.plotly_chart(fig, use_container_width=True)
 
                 with c2:
                     fig2 = go.Figure(go.Bar(
                         x=[f"PC{i+1}" for i in range(len(var))],
                         y=var * 100,
-                        marker=dict(
-                            color=['#00d4ff', '#8b5cf6', '#f472b6'][:len(var)],
-                            opacity=0.85
-                        ),
+                        marker=dict(color=PLOT_COLORS[:len(var)]),
                         text=[f"{v:.1f}%" for v in var * 100],
                         textposition='outside',
-                        textfont=dict(color='#e2e8f0', size=11)
+                        textfont=dict(color='#1e293b', size=11)
                     ))
-                    fig2.update_layout(
-                        title="Explained Variance",
-                        paper_bgcolor='rgba(0,0,0,0)',
-                        plot_bgcolor='rgba(10,14,26,0.8)',
-                        font=dict(color='#94a3b8', family='DM Sans'),
-                        title_font=dict(color='#e2e8f0', size=14),
-                        xaxis=dict(gridcolor='#1e2d4a'),
-                        yaxis=dict(gridcolor='#1e2d4a', title="Variance %"),
-                        margin=dict(l=0, r=0, t=40, b=0)
-                    )
+                    fig2.update_layout(**plot_layout("Explained Variance"))
+                    fig2.update_yaxes(title="Variance %")
                     st.plotly_chart(fig2, use_container_width=True)
             else:
                 st.info("Select at least 2 numeric features for PCA visualization.")
@@ -700,7 +917,6 @@ def step_data_input():
                 st.error("Please select target and at least one feature.")
 
 
-# ─── STEP 2: EDA ──────────────────────────────────────────────────────────────
 def step_eda():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -722,33 +938,21 @@ def step_eda():
 
     with tab1:
         section_card("Feature Distributions", "📊")
-        n = len(num_cols)
-        cols_per_row = min(3, n)
-        if n > 0:
+        if num_cols:
             selected_col = st.selectbox("Select feature", num_cols)
             c1, c2 = st.columns(2)
             with c1:
                 fig = px.histogram(sub, x=selected_col, nbins=40,
-                                   color_discrete_sequence=['#00d4ff'],
+                                   color_discrete_sequence=['#0099cc'],
                                    title=f"Distribution: {selected_col}")
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                                  plot_bgcolor='rgba(10,14,26,0.8)',
-                                  font=dict(color='#94a3b8'),
-                                  xaxis=dict(gridcolor='#1e2d4a'),
-                                  yaxis=dict(gridcolor='#1e2d4a'),
-                                  margin=dict(l=0,r=0,t=40,b=0))
+                fig.update_layout(**plot_layout(f"Distribution: {selected_col}"))
                 st.plotly_chart(fig, use_container_width=True)
             with c2:
                 fig2 = go.Figure()
                 fig2.add_trace(go.Violin(y=sub[selected_col].dropna(), box_visible=True,
-                                         line_color='#8b5cf6', fillcolor='rgba(139,92,246,0.2)',
+                                         line_color='#7c3aed', fillcolor='rgba(124,58,237,0.15)',
                                          name=selected_col, meanline_visible=True))
-                fig2.update_layout(title=f"Violin: {selected_col}",
-                                   paper_bgcolor='rgba(0,0,0,0)',
-                                   plot_bgcolor='rgba(10,14,26,0.8)',
-                                   font=dict(color='#94a3b8'),
-                                   yaxis=dict(gridcolor='#1e2d4a'),
-                                   margin=dict(l=0,r=0,t=40,b=0))
+                fig2.update_layout(**plot_layout(f"Violin: {selected_col}"))
                 st.plotly_chart(fig2, use_container_width=True)
 
     with tab2:
@@ -758,12 +962,9 @@ def step_eda():
             fig = px.imshow(corr, text_auto=".2f", aspect="auto",
                             color_continuous_scale="RdBu_r",
                             title="Pearson Correlation Heatmap")
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                               font=dict(color='#94a3b8'),
-                               margin=dict(l=0,r=0,t=40,b=0))
+            fig.update_layout(**plot_layout("Pearson Correlation Heatmap"))
             st.plotly_chart(fig, use_container_width=True)
 
-            # High correlations
             high_corr = []
             for i in range(len(corr.columns)):
                 for j in range(i+1, len(corr.columns)):
@@ -779,23 +980,13 @@ def step_eda():
         section_card("Outlier Visualization — Boxplots", "📦")
         if num_cols:
             fig = go.Figure()
-            colors = ['#00d4ff', '#8b5cf6', '#f472b6', '#10b981', '#f59e0b',
-                      '#3b82f6', '#ec4899', '#14b8a6', '#a78bfa', '#fb923c']
             for i, col in enumerate(num_cols):
                 fig.add_trace(go.Box(
                     y=sub[col].dropna(), name=col,
-                    marker_color=colors[i % len(colors)],
+                    marker_color=PLOT_COLORS[i % len(PLOT_COLORS)],
                     boxpoints='outliers', jitter=0.3,
-                    fillcolor=f"rgba({','.join(str(int(c,16)) for c in [colors[i%len(colors)][1:3], colors[i%len(colors)][3:5], colors[i%len(colors)][5:]])},0.15)"
                 ))
-            fig.update_layout(title="Feature Boxplots",
-                              paper_bgcolor='rgba(0,0,0,0)',
-                              plot_bgcolor='rgba(10,14,26,0.8)',
-                              font=dict(color='#94a3b8'),
-                              yaxis=dict(gridcolor='#1e2d4a'),
-                              xaxis=dict(gridcolor='#1e2d4a'),
-                              showlegend=False,
-                              margin=dict(l=0,r=0,t=40,b=0))
+            fig.update_layout(**plot_layout("Feature Boxplots"), showlegend=False)
             st.plotly_chart(fig, use_container_width=True)
 
     with tab4:
@@ -804,35 +995,25 @@ def step_eda():
             c1, c2 = st.columns(2)
             with c1:
                 fig = px.histogram(sub, x=target, nbins=40,
-                                   color_discrete_sequence=['#f472b6'],
+                                   color_discrete_sequence=['#db2777'],
                                    title=f"Target Distribution: {target}")
-                fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                                  plot_bgcolor='rgba(10,14,26,0.8)',
-                                  font=dict(color='#94a3b8'),
-                                  xaxis=dict(gridcolor='#1e2d4a'),
-                                  yaxis=dict(gridcolor='#1e2d4a'),
-                                  margin=dict(l=0,r=0,t=40,b=0))
+                fig.update_layout(**plot_layout(f"Target Distribution: {target}"))
                 st.plotly_chart(fig, use_container_width=True)
             with c2:
-                # Q-Q plot
                 from scipy import stats as sp_stats
                 sorted_vals = np.sort(sub[target].dropna())
                 theoretical = sp_stats.norm.ppf(np.linspace(0.01, 0.99, len(sorted_vals)))
                 fig2 = go.Figure()
                 fig2.add_trace(go.Scatter(x=theoretical, y=sorted_vals, mode='markers',
-                                          marker=dict(color='#10b981', size=4, opacity=0.7),
+                                          marker=dict(color='#059669', size=4, opacity=0.7),
                                           name='Data'))
                 fig2.add_trace(go.Scatter(x=[theoretical[0], theoretical[-1]],
                                           y=[theoretical[0], theoretical[-1]],
-                                          mode='lines', line=dict(color='#f472b6', dash='dash'),
+                                          mode='lines', line=dict(color='#db2777', dash='dash'),
                                           name='Normal'))
-                fig2.update_layout(title="Q-Q Plot",
-                                   paper_bgcolor='rgba(0,0,0,0)',
-                                   plot_bgcolor='rgba(10,14,26,0.8)',
-                                   font=dict(color='#94a3b8'),
-                                   xaxis=dict(gridcolor='#1e2d4a', title="Theoretical Quantiles"),
-                                   yaxis=dict(gridcolor='#1e2d4a', title="Sample Quantiles"),
-                                   margin=dict(l=0,r=0,t=40,b=0))
+                fig2.update_layout(**plot_layout("Q-Q Plot"))
+                fig2.update_xaxes(title="Theoretical Quantiles")
+                fig2.update_yaxes(title="Sample Quantiles")
                 st.plotly_chart(fig2, use_container_width=True)
         else:
             vc = sub[target].value_counts()
@@ -840,32 +1021,25 @@ def step_eda():
                          labels={'x': target, 'y': 'Count'},
                          title="Class Distribution",
                          color=vc.values,
-                         color_continuous_scale=['#8b5cf6', '#00d4ff'])
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                               plot_bgcolor='rgba(10,14,26,0.8)',
-                               font=dict(color='#94a3b8'),
-                               margin=dict(l=0,r=0,t=40,b=0))
+                         color_continuous_scale=['#7c3aed', '#0099cc'])
+            fig.update_layout(**plot_layout("Class Distribution"))
             st.plotly_chart(fig, use_container_width=True)
 
-            # Class imbalance warning
             if vc.max() / vc.min() > 3:
                 st.warning("⚠️ Significant class imbalance detected.")
 
     with tab5:
         section_card("Descriptive Statistics", "📋")
         st.dataframe(sub[num_cols].describe().round(4), use_container_width=True)
-        # Missing values
         miss = sub.isnull().sum()
         miss = miss[miss > 0]
         if len(miss) > 0:
             st.warning(f"Missing values found in {len(miss)} column(s):")
             fig = px.bar(x=miss.index, y=miss.values,
                          labels={'x': 'Column', 'y': 'Missing Count'},
-                         color=miss.values, color_continuous_scale=['#f59e0b', '#f472b6'])
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                               plot_bgcolor='rgba(10,14,26,0.8)',
-                               font=dict(color='#94a3b8'),
-                               margin=dict(l=0,r=0,t=40,b=0))
+                         color=miss.values,
+                         color_continuous_scale=['#d97706', '#db2777'])
+            fig.update_layout(**plot_layout("Missing Values"))
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.success("✓ No missing values found!")
@@ -875,7 +1049,6 @@ def step_eda():
         st.rerun()
 
 
-# ─── STEP 3: Data Engineering ─────────────────────────────────────────────────
 def step_data_engineering():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -891,7 +1064,6 @@ def step_data_engineering():
     all_cols = feats + [target]
     sub = df[all_cols].copy()
 
-    # Imputation
     section_card("Missing Value Imputation", "🔧")
     miss_cols = [c for c in num_cols if sub[c].isnull().sum() > 0]
     if miss_cols:
@@ -913,7 +1085,6 @@ def step_data_engineering():
 
     st.markdown('<hr style="margin:1rem 0;">', unsafe_allow_html=True)
 
-    # Outlier Detection
     section_card("Outlier Detection", "🔍")
     method_out = st.selectbox("Detection method", ["IQR", "Isolation Forest", "DBSCAN", "OPTICS"])
 
@@ -928,21 +1099,18 @@ def step_data_engineering():
                 IQR = Q3 - Q1
                 mask |= (X_out[c] < Q1 - 1.5*IQR) | (X_out[c] > Q3 + 1.5*IQR)
             outlier_indices = X_out[mask].index.tolist()
-
         elif method_out == "Isolation Forest":
             from sklearn.ensemble import IsolationForest
             from sklearn.preprocessing import StandardScaler
             Xs = StandardScaler().fit_transform(X_out)
             preds = IsolationForest(contamination=0.05, random_state=42).fit_predict(Xs)
             outlier_indices = X_out[preds == -1].index.tolist()
-
         elif method_out == "DBSCAN":
             from sklearn.cluster import DBSCAN
             from sklearn.preprocessing import StandardScaler
             Xs = StandardScaler().fit_transform(X_out)
             preds = DBSCAN(eps=0.5, min_samples=5).fit_predict(Xs)
             outlier_indices = X_out[preds == -1].index.tolist()
-
         elif method_out == "OPTICS":
             from sklearn.cluster import OPTICS
             from sklearn.preprocessing import StandardScaler
@@ -956,13 +1124,12 @@ def step_data_engineering():
         n_out = len(st.session_state.outlier_indices)
         pct = 100 * n_out / len(sub)
         st.markdown(f"""
-        <div style="background:rgba(245,158,11,0.1); border:1px solid rgba(245,158,11,0.4); border-radius:10px; padding:1rem; margin:1rem 0;">
-            <div style="font-family:'Orbitron',monospace; color:#f59e0b; font-size:0.9rem; font-weight:700;">⚠️ OUTLIERS DETECTED</div>
-            <div style="color:#94a3b8; margin-top:0.4rem; font-size:0.85rem;">{n_out} rows ({pct:.1f}% of data) identified as outliers</div>
+        <div class="highlight-box-warn">
+            <div style="font-weight:700; color:#92400e; font-size:0.9rem;">⚠️ Outliers Detected</div>
+            <div style="color:#78350f; margin-top:0.3rem; font-size:0.85rem;">{n_out} rows ({pct:.1f}% of data) identified as outliers</div>
         </div>
         """, unsafe_allow_html=True)
 
-        # Visualization of outliers using PCA
         from sklearn.preprocessing import StandardScaler
         from sklearn.decomposition import PCA
         X_vis = sub[num_cols].fillna(sub[num_cols].median())
@@ -973,15 +1140,10 @@ def step_data_engineering():
         vis_df.loc[st.session_state.outlier_indices, "type"] = "Outlier"
 
         fig = px.scatter(vis_df, x="PC1", y="PC2", color="type",
-                         color_discrete_map={"Normal": "#00d4ff", "Outlier": "#f472b6"},
+                         color_discrete_map={"Normal": "#0099cc", "Outlier": "#db2777"},
                          title="Outlier Visualization (PCA Space)",
                          opacity=0.7)
-        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                           plot_bgcolor='rgba(10,14,26,0.8)',
-                           font=dict(color='#94a3b8'),
-                           xaxis=dict(gridcolor='#1e2d4a'),
-                           yaxis=dict(gridcolor='#1e2d4a'),
-                           margin=dict(l=0,r=0,t=40,b=0))
+        fig.update_layout(**plot_layout("Outlier Visualization (PCA Space)"))
         st.plotly_chart(fig, use_container_width=True)
 
         col1, col2 = st.columns(2)
@@ -1012,7 +1174,6 @@ def step_data_engineering():
         st.rerun()
 
 
-# ─── STEP 4: Feature Selection ────────────────────────────────────────────────
 def step_feature_selection():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -1069,37 +1230,29 @@ def step_feature_selection():
         col1, col2 = st.columns([2, 1])
         with col1:
             res_series = pd.Series(results).sort_values(ascending=True)
-            colors_list = ['#f472b6' if v < list(results.values())[-1] * 0.3 else '#00d4ff'
-                           for v in res_series.values]
             fig = go.Figure(go.Bar(
                 y=res_series.index, x=res_series.values, orientation='h',
-                marker=dict(color=['#10b981' if n in selected else '#475569' for n in res_series.index]),
+                marker=dict(color=['#059669' if n in selected else '#cbd5e1' for n in res_series.index]),
                 text=[f"{v:.4f}" for v in res_series.values],
-                textposition='outside', textfont=dict(color='#e2e8f0', size=10)
+                textposition='outside',
+                textfont=dict(color='#1e293b', size=10)
             ))
-            fig.update_layout(title=f"Feature Scores — {method}",
-                               paper_bgcolor='rgba(0,0,0,0)',
-                               plot_bgcolor='rgba(10,14,26,0.8)',
-                               font=dict(color='#94a3b8'),
-                               xaxis=dict(gridcolor='#1e2d4a'),
-                               yaxis=dict(gridcolor='#1e2d4a'),
-                               margin=dict(l=0,r=0,t=40,b=0),
-                               height=max(300, len(results) * 35))
+            fig.update_layout(**plot_layout(f"Feature Scores — {method}"),
+                              height=max(300, len(results) * 35))
             st.plotly_chart(fig, use_container_width=True)
 
         with col2:
             st.markdown(f"""
-            <div class="section-card" style="margin-top:0;">
-                <div class="section-title">📌 SELECTED</div>
-                <div style="font-family:'Orbitron',monospace; font-size:2rem; color:#10b981; font-weight:900;">{len(selected)}</div>
+            <div class="section-card" style="margin-top:0; text-align:center;">
+                <div class="section-title" style="justify-content:center;">📌 Selected Features</div>
+                <div style="font-family:'Orbitron',monospace; font-size:2rem; color:#059669; font-weight:900;">{len(selected)}</div>
                 <div style="color:#64748b; font-size:0.75rem; font-family:'Space Mono',monospace;">OF {len(num_feats)} FEATURES</div>
-                <hr style="margin:0.8rem 0; border-color:#1e2d4a;">
+                <hr style="margin:0.8rem 0; border-color:#e2e8f0;">
             """, unsafe_allow_html=True)
             for f in selected:
-                st.markdown(f'<div style="color:#e2e8f0; font-size:0.82rem; padding:3px 0;">✓ {f}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div style="color:#1e293b; font-size:0.82rem; padding:3px 0; text-align:left;">✓ {f}</div>', unsafe_allow_html=True)
             st.markdown('</div>', unsafe_allow_html=True)
 
-        # Allow manual override
         final_sel = st.multiselect("Confirm/modify selected features", num_feats, default=selected)
         st.session_state.feature_selected_cols = final_sel if final_sel else selected
 
@@ -1110,7 +1263,6 @@ def step_feature_selection():
         st.rerun()
 
 
-# ─── STEP 5: Data Split ───────────────────────────────────────────────────────
 def step_data_split():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -1131,8 +1283,7 @@ def step_data_split():
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        test_size = st.slider("Test Set Size", 0.1, 0.5, 0.2, 0.05,
-                               help="Fraction of data for testing")
+        test_size = st.slider("Test Set Size", 0.1, 0.5, 0.2, 0.05)
     with col2:
         random_state = st.number_input("Random Seed", 0, 999, 42)
     with col3:
@@ -1163,32 +1314,26 @@ def step_data_split():
         st.session_state.y_train = y_tr
         st.session_state.y_test = y_te
 
-        # Visualize split
         train_n, test_n = len(X_tr), len(X_te)
         total = train_n + test_n
 
         col_v1, col_v2, col_v3 = st.columns(3)
         col_v1.markdown(f'<div class="metric-card"><span class="metric-value">{train_n:,}</span><span class="metric-label">Train Samples</span></div>', unsafe_allow_html=True)
-        col_v2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#8b5cf6">{test_n:,}</span><span class="metric-label">Test Samples</span></div>', unsafe_allow_html=True)
-        col_v3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#10b981">{len(feats)}</span><span class="metric-label">Features</span></div>', unsafe_allow_html=True)
+        col_v2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#7c3aed">{test_n:,}</span><span class="metric-label">Test Samples</span></div>', unsafe_allow_html=True)
+        col_v3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#059669">{len(feats)}</span><span class="metric-label">Features</span></div>', unsafe_allow_html=True)
 
         fig = go.Figure(go.Pie(
             values=[train_n, test_n],
             labels=[f'Train ({100*(1-test_size):.0f}%)', f'Test ({100*test_size:.0f}%)'],
-            marker_colors=['#00d4ff', '#8b5cf6'],
+            marker_colors=['#0099cc', '#7c3aed'],
             hole=0.6,
             textinfo='label+percent',
-            textfont=dict(color='#e2e8f0', size=12)
+            textfont=dict(color='#1e293b', size=12)
         ))
-        fig.update_layout(
-            title="Data Split Distribution",
-            paper_bgcolor='rgba(0,0,0,0)',
-            font=dict(color='#94a3b8'),
-            showlegend=False,
-            annotations=[dict(text=f'{total:,}<br>Total', x=0.5, y=0.5,
-                              font=dict(size=14, color='#e2e8f0'), showarrow=False)],
-            margin=dict(l=0,r=0,t=40,b=0), height=300
-        )
+        fig.update_layout(**plot_layout("Data Split Distribution"),
+                          showlegend=False, height=300,
+                          annotations=[dict(text=f'{total:,}<br>Total', x=0.5, y=0.5,
+                                            font=dict(size=14, color='#1e293b'), showarrow=False)])
         st.plotly_chart(fig, use_container_width=True)
         st.success("✓ Data split complete. Features standardized with StandardScaler.")
 
@@ -1200,13 +1345,13 @@ def step_data_split():
             st.rerun()
 
 
-# ─── STEP 6: Model Selection ──────────────────────────────────────────────────
 def step_model_selection():
+    pt_badge = 'badge-cyan' if st.session_state.problem_type == 'Classification' else 'badge-orange'
     st.markdown(f"""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
         <div class="step-number-badge">07</div>
         <div class="step-header-large">Model Selection</div>
-        <span class="badge badge-{'cyan' if st.session_state.problem_type=='Classification' else 'orange'}">{st.session_state.problem_type}</span>
+        <span class="badge {pt_badge}">{st.session_state.problem_type}</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1214,17 +1359,17 @@ def step_model_selection():
 
     if is_cls:
         models_info = {
-            "Logistic Regression": {"icon": "📐", "desc": "Linear decision boundary, fast, interpretable", "color": "#00d4ff"},
-            "SVM (Support Vector Machine)": {"icon": "⚔️", "desc": "Kernel-based, powerful for non-linear boundaries", "color": "#8b5cf6"},
-            "Random Forest": {"icon": "🌲", "desc": "Ensemble of decision trees, robust to overfitting", "color": "#10b981"},
-            "K-Nearest Neighbors": {"icon": "🔵", "desc": "Instance-based, no training phase", "color": "#f59e0b"},
+            "Logistic Regression": {"icon": "📐", "desc": "Linear decision boundary, fast and interpretable", "color": "#0099cc"},
+            "SVM (Support Vector Machine)": {"icon": "⚔️", "desc": "Kernel-based, powerful for non-linear boundaries", "color": "#7c3aed"},
+            "Random Forest": {"icon": "🌲", "desc": "Ensemble of decision trees, robust to overfitting", "color": "#059669"},
+            "K-Nearest Neighbors": {"icon": "🔵", "desc": "Instance-based, no training phase", "color": "#d97706"},
         }
     else:
         models_info = {
-            "Linear Regression": {"icon": "📏", "desc": "Simple linear relationship modeling", "color": "#00d4ff"},
-            "SVM Regression (SVR)": {"icon": "⚔️", "desc": "Kernel-based regression with epsilon tube", "color": "#8b5cf6"},
-            "Random Forest Regressor": {"icon": "🌲", "desc": "Ensemble method, handles non-linearity well", "color": "#10b981"},
-            "K-Nearest Neighbors Regressor": {"icon": "🔵", "desc": "Predict based on nearest neighbors", "color": "#f59e0b"},
+            "Linear Regression": {"icon": "📏", "desc": "Simple linear relationship modeling", "color": "#0099cc"},
+            "SVM Regression (SVR)": {"icon": "⚔️", "desc": "Kernel-based regression with epsilon tube", "color": "#7c3aed"},
+            "Random Forest Regressor": {"icon": "🌲", "desc": "Ensemble method, handles non-linearity well", "color": "#059669"},
+            "K-Nearest Neighbors Regressor": {"icon": "🔵", "desc": "Predict based on nearest neighbors", "color": "#d97706"},
         }
 
     selected_model = st.session_state.get('model_name', list(models_info.keys())[0])
@@ -1233,15 +1378,17 @@ def step_model_selection():
     for i, (name, info) in enumerate(models_info.items()):
         with cols[i]:
             is_sel = (name == selected_model)
-            border = info['color'] if is_sel else '#1e2d4a'
-            bg = f"rgba{tuple(int(info['color'][j:j+2],16) for j in (1,3,5))}".replace('rgba', 'rgba(').replace(')', ',0.1)') if is_sel else 'var(--bg-card)'
+            border = info['color'] if is_sel else '#e2e8f0'
+            bg = '#f0f9ff' if is_sel else '#ffffff'
+            bw = '2px' if is_sel else '1px'
             st.markdown(f"""
-            <div style="background:{bg}; border:2px solid {border}; border-radius:12px; padding:1.2rem; text-align:center; min-height:140px;">
-                <div style="font-size:2rem;">{info['icon']}</div>
-                <div style="font-family:'Space Mono',monospace; font-size:0.72rem; color:#e2e8f0; font-weight:700; margin-top:0.5rem; letter-spacing:0.05em;">{name}</div>
+            <div style="background:{bg}; border:{bw} solid {border}; border-radius:12px; padding:1.2rem; text-align:center; min-height:140px;">
+                <div style="font-size:1.8rem;">{info['icon']}</div>
+                <div style="font-size:0.78rem; color:#1e293b; font-weight:700; margin-top:0.5rem; font-family:'Space Mono',monospace;">{name}</div>
                 <div style="color:#64748b; font-size:0.72rem; margin-top:0.4rem; line-height:1.4;">{info['desc']}</div>
             </div>
             """, unsafe_allow_html=True)
+            st.markdown("<div style='height:0.3rem;'></div>", unsafe_allow_html=True)
             if st.button(f"Select", key=f"sel_{i}", use_container_width=True):
                 st.session_state.model_name = name
                 st.rerun()
@@ -1286,7 +1433,6 @@ def step_model_selection():
         st.rerun()
 
 
-# ─── STEP 7: Training & KFold ─────────────────────────────────────────────────
 def step_training():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -1296,7 +1442,6 @@ def step_training():
     """, unsafe_allow_html=True)
 
     from sklearn.model_selection import KFold, StratifiedKFold, cross_val_score
-    from sklearn import metrics as skm
 
     k = st.number_input("K (Number of Folds)", min_value=2, max_value=20, value=5)
     st.session_state.k_folds = k
@@ -1345,13 +1490,10 @@ def step_training():
             scoring = 'accuracy' if is_cls else 'r2'
             cv_scores = cross_val_score(model, X_tr, y_tr, cv=cv, scoring=scoring)
             model.fit(X_tr, y_tr)
-            y_pred = model.predict(X_te)
 
             st.session_state.model = model
             st.session_state.cv_results = cv_scores
-            st.session_state.y_pred = y_pred
 
-        # KFold results
         section_card(f"{k}-Fold Cross-Validation Results", "🔄")
         fold_df = pd.DataFrame({
             "Fold": [f"Fold {i+1}" for i in range(k)],
@@ -1363,32 +1505,24 @@ def step_training():
             x=fold_df["Fold"], y=fold_df["Score"],
             marker=dict(
                 color=cv_scores,
-                colorscale=[[0, '#f472b6'], [0.5, '#8b5cf6'], [1, '#00d4ff']],
+                colorscale=[[0, '#db2777'], [0.5, '#7c3aed'], [1, '#0099cc']],
                 showscale=False
             ),
             text=[f"{s:.4f}" for s in cv_scores],
             textposition='outside',
-            textfont=dict(color='#e2e8f0')
+            textfont=dict(color='#1e293b')
         ))
-        fig.add_hline(y=cv_scores.mean(), line_dash="dash", line_color="#10b981",
+        fig.add_hline(y=cv_scores.mean(), line_dash="dash", line_color="#059669",
                       annotation_text=f"Mean: {cv_scores.mean():.4f}",
-                      annotation_font_color="#10b981")
-        fig.update_layout(
-            title=f"CV {scoring.upper()} per Fold",
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(10,14,26,0.8)',
-            font=dict(color='#94a3b8'),
-            xaxis=dict(gridcolor='#1e2d4a'),
-            yaxis=dict(gridcolor='#1e2d4a'),
-            margin=dict(l=0,r=0,t=40,b=0)
-        )
+                      annotation_font_color="#059669")
+        fig.update_layout(**plot_layout(f"CV {scoring.upper()} per Fold"))
         st.plotly_chart(fig, use_container_width=True)
 
         c1, c2, c3, c4 = st.columns(4)
         c1.markdown(f'<div class="metric-card"><span class="metric-value">{cv_scores.mean():.4f}</span><span class="metric-label">Mean CV Score</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#8b5cf6">{cv_scores.std():.4f}</span><span class="metric-label">Std Deviation</span></div>', unsafe_allow_html=True)
-        c3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#10b981">{cv_scores.max():.4f}</span><span class="metric-label">Best Fold</span></div>', unsafe_allow_html=True)
-        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#f472b6">{cv_scores.min():.4f}</span><span class="metric-label">Worst Fold</span></div>', unsafe_allow_html=True)
+        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#7c3aed">{cv_scores.std():.4f}</span><span class="metric-label">Std Deviation</span></div>', unsafe_allow_html=True)
+        c3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#059669">{cv_scores.max():.4f}</span><span class="metric-label">Best Fold</span></div>', unsafe_allow_html=True)
+        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#db2777">{cv_scores.min():.4f}</span><span class="metric-label">Worst Fold</span></div>', unsafe_allow_html=True)
 
         st.success(f"✓ Model trained! Mean CV {scoring}: {cv_scores.mean():.4f} ± {cv_scores.std():.4f}")
 
@@ -1400,7 +1534,10 @@ def step_training():
             st.rerun()
 
 
-# ─── STEP 8: Metrics ─────────────────────────────────────────────────────────
+# ─────────────────────────────────────────────────────────────────
+#  STEP 9 — METRICS  (fully rewritten with precision/recall +
+#            model-specific visualizations)
+# ─────────────────────────────────────────────────────────────────
 def step_metrics():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -1411,7 +1548,8 @@ def step_metrics():
 
     from sklearn import metrics as skm
     is_cls = st.session_state.problem_type == "Classification"
-    model = st.session_state.model
+    model      = st.session_state.model
+    model_name = st.session_state.model_name or ""
     X_tr = st.session_state.X_train
     y_tr = st.session_state.y_train
     X_te = st.session_state.X_test
@@ -1421,135 +1559,496 @@ def step_metrics():
         st.error("No trained model found. Please go back and train a model.")
         return
 
-    y_pred = model.predict(X_te)
+    y_pred    = model.predict(X_te)
     y_pred_tr = model.predict(X_tr)
 
+    # ── helper: determine if binary or multiclass ──────────────────
+    classes = np.unique(y_te)
+    is_binary = len(classes) == 2
+
+    # ══════════════════════════════════════════════════════════════
+    #  CLASSIFICATION
+    # ══════════════════════════════════════════════════════════════
     if is_cls:
         train_acc = skm.accuracy_score(y_tr, y_pred_tr)
-        test_acc = skm.accuracy_score(y_te, y_pred)
-        train_f1 = skm.f1_score(y_tr, y_pred_tr, average='weighted')
-        test_f1 = skm.f1_score(y_te, y_pred, average='weighted')
+        test_acc  = skm.accuracy_score(y_te, y_pred)
+        train_f1  = skm.f1_score(y_tr, y_pred_tr, average='weighted')
+        test_f1   = skm.f1_score(y_te, y_pred,    average='weighted')
+        precision = skm.precision_score(y_te, y_pred, average='weighted', zero_division=0)
+        recall    = skm.recall_score(y_te, y_pred,    average='weighted', zero_division=0)
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.markdown(f'<div class="metric-card"><span class="metric-value">{test_acc:.4f}</span><span class="metric-label">Test Accuracy</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#8b5cf6">{test_f1:.4f}</span><span class="metric-label">F1 Score</span></div>', unsafe_allow_html=True)
-        c3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#10b981">{train_acc:.4f}</span><span class="metric-label">Train Accuracy</span></div>', unsafe_allow_html=True)
-
-        # Overfit/underfit
+        # ── top metric row ─────────────────────────────────────────
         diff = train_acc - test_acc
         if diff > 0.1:
-            label, color, msg = "OVERFITTING", "#f472b6", f"Train-Test gap: {diff:.3f}"
+            fit_label, fit_color, fit_msg = "OVERFITTING", "#dc2626", f"Train–Test gap: {diff:.3f}"
         elif test_acc < 0.6:
-            label, color, msg = "UNDERFITTING", "#f59e0b", "Low test accuracy"
+            fit_label, fit_color, fit_msg = "UNDERFITTING", "#d97706", "Low test accuracy"
         else:
-            label, color, msg = "GOOD FIT", "#10b981", "Model generalizes well"
-        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:{color}; font-size:1rem;">{label}</span><span class="metric-label">{msg}</span></div>', unsafe_allow_html=True)
+            fit_label, fit_color, fit_msg = "GOOD FIT", "#059669", "Model generalises well"
 
-        tab1, tab2, tab3 = st.tabs(["🗺️ Confusion Matrix", "📊 Classification Report", "🔄 Train vs Test"])
+        cols = st.columns(6)
+        metrics_top = [
+            ("Test Accuracy",  f"{test_acc:.4f}",  "#0099cc"),
+            ("Precision",      f"{precision:.4f}", "#7c3aed"),
+            ("Recall",         f"{recall:.4f}",    "#db2777"),
+            ("F1 Score",       f"{test_f1:.4f}",   "#d97706"),
+            ("Train Accuracy", f"{train_acc:.4f}", "#059669"),
+            (fit_msg,          fit_label,           fit_color),
+        ]
+        for col, (lbl, val, clr) in zip(cols, metrics_top):
+            col.markdown(
+                f'<div class="metric-card"><span class="metric-value" style="color:{clr}; font-size:1.1rem;">{val}</span>'
+                f'<span class="metric-label">{lbl}</span></div>',
+                unsafe_allow_html=True
+            )
 
-        with tab1:
-            cm = skm.confusion_matrix(y_te, y_pred)
-            labels = [str(i) for i in sorted(set(y_te))]
+        # ── tabs ───────────────────────────────────────────────────
+        tab_labels = ["🗺️ Confusion Matrix", "📊 Class Report",
+                      "🔄 Train vs Test", "🎯 Model-Specific"]
+        # add ROC tab only for binary problems that support predict_proba
+        has_proba = hasattr(model, "predict_proba")
+        if is_binary and has_proba:
+            tab_labels.append("📉 ROC / PR Curve")
+
+        tabs = st.tabs(tab_labels)
+
+        # ── Confusion Matrix ───────────────────────────────────────
+        with tabs[0]:
+            cm     = skm.confusion_matrix(y_te, y_pred)
+            labels = [str(c) for c in sorted(classes)]
             fig = px.imshow(cm, text_auto=True, aspect="auto",
                             labels=dict(x="Predicted", y="Actual"),
-                            color_continuous_scale=[[0,'#0a0e1a'],[0.5,'#8b5cf6'],[1,'#00d4ff']],
-                            x=labels, y=labels,
-                            title="Confusion Matrix")
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                               font=dict(color='#94a3b8'),
-                               margin=dict(l=0,r=0,t=40,b=0))
+                            color_continuous_scale=[[0,'#f8fafc'],[0.5,'#7c3aed'],[1,'#0099cc']],
+                            x=labels, y=labels)
+            fig.update_layout(**plot_layout("Confusion Matrix"))
             st.plotly_chart(fig, use_container_width=True)
 
-        with tab2:
-            report = skm.classification_report(y_te, y_pred, output_dict=True)
+            # per-class breakdown
+            st.markdown("#### Per-Class Metrics")
+            per_class = skm.classification_report(y_te, y_pred, output_dict=True, zero_division=0)
+            pc_df = pd.DataFrame(per_class).T
+            numeric_pc = pc_df.select_dtypes(include=np.number)
+            pc_df[numeric_pc.columns] = numeric_pc.round(4)
+            st.dataframe(pc_df, use_container_width=True)
+
+        # ── Classification Report ──────────────────────────────────
+        with tabs[1]:
+            report = skm.classification_report(y_te, y_pred, output_dict=True, zero_division=0)
             rep_df = pd.DataFrame(report).transpose().round(3)
             st.dataframe(rep_df, use_container_width=True)
 
-        with tab3:
-            fig = go.Figure()
-            cats = ['Accuracy', 'F1 Score']
-            train_vals = [train_acc, train_f1]
-            test_vals = [test_acc, test_f1]
-            fig.add_trace(go.Bar(name='Train', x=cats, y=train_vals,
-                                  marker_color='#00d4ff', opacity=0.85))
-            fig.add_trace(go.Bar(name='Test', x=cats, y=test_vals,
-                                  marker_color='#8b5cf6', opacity=0.85))
-            fig.update_layout(
-                barmode='group', title="Train vs Test Performance",
-                paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(10,14,26,0.8)',
-                font=dict(color='#94a3b8'),
-                yaxis=dict(gridcolor='#1e2d4a', range=[0,1]),
-                xaxis=dict(gridcolor='#1e2d4a'),
-                legend=dict(bgcolor='rgba(0,0,0,0)'),
-                margin=dict(l=0,r=0,t=40,b=0)
+            # per-class precision / recall / f1 bar chart
+            class_rows = [k for k in report if k not in ['accuracy','macro avg','weighted avg']]
+            prec_vals = [report[k]['precision'] for k in class_rows]
+            rec_vals  = [report[k]['recall']    for k in class_rows]
+            f1_vals   = [report[k]['f1-score']  for k in class_rows]
+
+            fig_pr = go.Figure()
+            fig_pr.add_trace(go.Bar(name='Precision', x=class_rows, y=prec_vals,
+                                    marker_color='#0099cc', opacity=0.85))
+            fig_pr.add_trace(go.Bar(name='Recall',    x=class_rows, y=rec_vals,
+                                    marker_color='#db2777', opacity=0.85))
+            fig_pr.add_trace(go.Bar(name='F1 Score',  x=class_rows, y=f1_vals,
+                                    marker_color='#7c3aed', opacity=0.85))
+            fig_pr.update_layout(**plot_layout("Precision / Recall / F1 per Class"),
+                                 barmode='group')
+            fig_pr.update_yaxes(range=[0, 1])
+            st.plotly_chart(fig_pr, use_container_width=True)
+
+        # ── Train vs Test ──────────────────────────────────────────
+        with tabs[2]:
+            fig_tvt = go.Figure()
+            cats = ['Accuracy', 'Precision', 'Recall', 'F1 Score']
+            train_vals = [
+                train_acc,
+                skm.precision_score(y_tr, y_pred_tr, average='weighted', zero_division=0),
+                skm.recall_score(y_tr, y_pred_tr, average='weighted', zero_division=0),
+                train_f1,
+            ]
+            test_vals  = [test_acc, precision, recall, test_f1]
+            fig_tvt.add_trace(go.Bar(name='Train', x=cats, y=train_vals,
+                                     marker_color='#0099cc', opacity=0.85))
+            fig_tvt.add_trace(go.Bar(name='Test',  x=cats, y=test_vals,
+                                     marker_color='#7c3aed', opacity=0.85))
+            fig_tvt.update_layout(**plot_layout("Train vs Test — All Metrics"), barmode='group')
+            fig_tvt.update_yaxes(range=[0, 1])
+            st.plotly_chart(fig_tvt, use_container_width=True)
+
+            # ── radar chart ────────────────────────────────────────
+            radar_cats = ['Accuracy', 'Precision', 'Recall', 'F1']
+            fig_rad = go.Figure()
+            fig_rad.add_trace(go.Scatterpolar(
+                r=train_vals + [train_vals[0]], theta=radar_cats + [radar_cats[0]],
+                fill='toself', name='Train',
+                line_color='#0099cc', fillcolor='rgba(0,153,204,0.15)'
+            ))
+            fig_rad.add_trace(go.Scatterpolar(
+                r=test_vals + [test_vals[0]], theta=radar_cats + [radar_cats[0]],
+                fill='toself', name='Test',
+                line_color='#7c3aed', fillcolor='rgba(124,58,237,0.15)'
+            ))
+            fig_rad.update_layout(
+                polar=dict(radialaxis=dict(visible=True, range=[0, 1],
+                                           gridcolor='#e2e8f0',
+                                           tickfont=dict(color='#475569'))),
+                **plot_layout("Performance Radar"),
+                showlegend=True, height=400
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig_rad, use_container_width=True)
 
-    else:  # Regression
+        # ── Model-Specific Visualizations ─────────────────────────
+        with tabs[3]:
+            st.markdown(f"#### Model: `{model_name}`")
+
+            # ── Logistic Regression: coefficients ─────────────────
+            if "Logistic" in model_name:
+                section_card("Decision Coefficients", "📐")
+                feats = st.session_state.feature_selected_cols or st.session_state.selected_features
+                coef = model.coef_
+                if coef.shape[0] == 1:                  # binary
+                    coef_df = pd.DataFrame({"Feature": feats, "Coefficient": coef[0]})
+                    coef_df = coef_df.reindex(coef_df["Coefficient"].abs().sort_values(ascending=True).index)
+                    fig_coef = go.Figure(go.Bar(
+                        y=coef_df["Feature"], x=coef_df["Coefficient"], orientation='h',
+                        marker=dict(color=['#db2777' if v < 0 else '#059669' for v in coef_df["Coefficient"]]),
+                        text=[f"{v:.4f}" for v in coef_df["Coefficient"]],
+                        textposition='outside', textfont=dict(color='#1e293b', size=10)
+                    ))
+                    fig_coef.update_layout(**plot_layout("Feature Coefficients"),
+                                           height=max(300, len(feats)*30))
+                    st.plotly_chart(fig_coef, use_container_width=True)
+                else:                                   # multiclass — heatmap
+                    coef_df = pd.DataFrame(coef, columns=feats,
+                                           index=[f"Class {c}" for c in classes])
+                    fig_coef = px.imshow(coef_df, text_auto=".2f", aspect="auto",
+                                         color_continuous_scale="RdBu_r",
+                                         title="Coefficient Heatmap (class × feature)")
+                    fig_coef.update_layout(**plot_layout())
+                    st.plotly_chart(fig_coef, use_container_width=True)
+
+            # ── SVM: support vectors + decision scores ─────────────
+            elif "SVM" in model_name:
+                section_card("Decision Function Scores", "⚔️")
+                from sklearn.decomposition import PCA
+                pca2 = PCA(n_components=2)
+                X_2d = pca2.fit_transform(X_te)
+                df_sv = pd.DataFrame(X_2d, columns=["PC1", "PC2"])
+                df_sv["True Label"] = y_te.astype(str)
+                df_sv["Predicted"]  = y_pred.astype(str)
+                df_sv["Correct"]    = (y_te == y_pred)
+                fig_sv = px.scatter(df_sv, x="PC1", y="PC2",
+                                    color="True Label",
+                                    symbol="Correct",
+                                    symbol_map={True: "circle", False: "x"},
+                                    title="SVM — PCA Test-Set Projection (✗ = misclassified)",
+                                    color_discrete_sequence=PLOT_COLORS,
+                                    opacity=0.8)
+                fig_sv.update_layout(**plot_layout())
+                st.plotly_chart(fig_sv, use_container_width=True)
+                st.info(f"Support vectors: **{model.n_support_.sum()}** total across {len(classes)} class(es).")
+
+            # ── Random Forest: feature importances ─────────────────
+            elif "Random Forest" in model_name:
+                section_card("Feature Importances (Gini / MDI)", "🌲")
+                feats = st.session_state.feature_selected_cols or st.session_state.selected_features
+                imp = pd.Series(model.feature_importances_, index=feats).sort_values(ascending=True)
+                fig_imp = go.Figure(go.Bar(
+                    y=imp.index, x=imp.values, orientation='h',
+                    marker=dict(
+                        color=imp.values,
+                        colorscale=[[0,'#e2e8f0'],[0.6,'#7c3aed'],[1,'#059669']],
+                        showscale=False
+                    ),
+                    text=[f"{v:.4f}" for v in imp.values],
+                    textposition='outside',
+                    textfont=dict(color='#1e293b', size=10)
+                ))
+                fig_imp.update_layout(**plot_layout("Feature Importances"),
+                                      height=max(300, len(feats)*32))
+                st.plotly_chart(fig_imp, use_container_width=True)
+
+                # single tree visualisation (depth-limited)
+                with st.expander("🌳 View a Single Decision Tree (depth ≤ 3)"):
+                    try:
+                        from sklearn.tree import export_text
+                        tree_ = model.estimators_[0]
+                        tree_text = export_text(tree_,
+                                                feature_names=list(feats),
+                                                max_depth=3)
+                        st.code(tree_text, language="text")
+                    except Exception as e:
+                        st.warning(f"Could not render tree: {e}")
+
+            # ── KNN: neighbour distance distribution ───────────────
+            elif "K-Nearest" in model_name:
+                section_card("Neighbour Distance Distribution", "🔵")
+                dists, _ = model.kneighbors(X_te)
+                mean_dists = dists.mean(axis=1)
+                fig_knn = go.Figure()
+                fig_knn.add_trace(go.Histogram(x=mean_dists, nbinsx=30,
+                                               marker_color='#0099cc', opacity=0.8,
+                                               name='Mean K-Distance'))
+                fig_knn.update_layout(**plot_layout(f"Mean Distance to {model.n_neighbors} Neighbours"))
+                fig_knn.update_xaxes(title="Mean Distance")
+                fig_knn.update_yaxes(title="Count")
+                st.plotly_chart(fig_knn, use_container_width=True)
+
+                # prediction confidence: fraction of k neighbours agreeing
+                _, idx = model.kneighbors(X_te)
+                confidence = []
+                for i, nbrs in enumerate(idx):
+                    nbr_labels = y_tr[nbrs] if hasattr(y_tr, '__getitem__') else np.array(y_tr)[nbrs]
+                    conf = (nbr_labels == y_pred[i]).mean()
+                    confidence.append(conf)
+                fig_conf = px.histogram(x=confidence, nbins=20,
+                                        color_discrete_sequence=['#7c3aed'],
+                                        title="Prediction Confidence (neighbour agreement)")
+                fig_conf.update_layout(**plot_layout())
+                fig_conf.update_xaxes(title="Confidence", range=[0, 1])
+                st.plotly_chart(fig_conf, use_container_width=True)
+
+        # ── ROC / PR Curve (binary only) ───────────────────────────
+        if is_binary and has_proba and len(tabs) > 4:
+            with tabs[4]:
+                y_prob = model.predict_proba(X_te)[:, 1]
+
+                fpr, tpr, _ = skm.roc_curve(y_te, y_prob)
+                auc_val = skm.roc_auc_score(y_te, y_prob)
+
+                fig_roc = go.Figure()
+                fig_roc.add_trace(go.Scatter(
+                    x=fpr, y=tpr, mode='lines',
+                    line=dict(color='#0099cc', width=2.5),
+                    name=f'ROC (AUC = {auc_val:.4f})'
+                ))
+                fig_roc.add_trace(go.Scatter(
+                    x=[0,1], y=[0,1], mode='lines',
+                    line=dict(color='#94a3b8', dash='dash'),
+                    name='Random Classifier'
+                ))
+                fig_roc.update_layout(**plot_layout("ROC Curve"),
+                                      xaxis_title="False Positive Rate",
+                                      yaxis_title="True Positive Rate")
+                st.plotly_chart(fig_roc, use_container_width=True)
+
+                # Precision-Recall curve
+                prec_c, rec_c, _ = skm.precision_recall_curve(y_te, y_prob)
+                ap = skm.average_precision_score(y_te, y_prob)
+                fig_apc = go.Figure()
+                fig_apc.add_trace(go.Scatter(
+                    x=rec_c, y=prec_c, mode='lines',
+                    line=dict(color='#db2777', width=2.5),
+                    name=f'PR Curve (AP = {ap:.4f})',
+                    fill='tozeroy', fillcolor='rgba(219,39,119,0.08)'
+                ))
+                fig_apc.update_layout(**plot_layout("Precision-Recall Curve"),
+                                      xaxis_title="Recall",
+                                      yaxis_title="Precision")
+                st.plotly_chart(fig_apc, use_container_width=True)
+
+                col_roc1, col_roc2 = st.columns(2)
+                col_roc1.markdown(
+                    f'<div class="metric-card"><span class="metric-value" style="color:#0099cc">{auc_val:.4f}</span>'
+                    f'<span class="metric-label">ROC-AUC</span></div>', unsafe_allow_html=True
+                )
+                col_roc2.markdown(
+                    f'<div class="metric-card"><span class="metric-value" style="color:#db2777">{ap:.4f}</span>'
+                    f'<span class="metric-label">Avg Precision (PR-AUC)</span></div>', unsafe_allow_html=True
+                )
+
+    # ══════════════════════════════════════════════════════════════
+    #  REGRESSION
+    # ══════════════════════════════════════════════════════════════
+    else:
         train_r2 = skm.r2_score(y_tr, y_pred_tr)
-        test_r2 = skm.r2_score(y_te, y_pred)
-        rmse = np.sqrt(skm.mean_squared_error(y_te, y_pred))
-        mae = skm.mean_absolute_error(y_te, y_pred)
-
-        c1, c2, c3, c4, c5 = st.columns(5)
-        c1.markdown(f'<div class="metric-card"><span class="metric-value">{test_r2:.4f}</span><span class="metric-label">Test R²</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#8b5cf6">{train_r2:.4f}</span><span class="metric-label">Train R²</span></div>', unsafe_allow_html=True)
-        c3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#f472b6">{rmse:.4f}</span><span class="metric-label">RMSE</span></div>', unsafe_allow_html=True)
-        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#f59e0b">{mae:.4f}</span><span class="metric-label">MAE</span></div>', unsafe_allow_html=True)
+        test_r2  = skm.r2_score(y_te, y_pred)
+        rmse     = np.sqrt(skm.mean_squared_error(y_te, y_pred))
+        mae      = skm.mean_absolute_error(y_te, y_pred)
+        mape     = np.mean(np.abs((y_te - y_pred) / (np.abs(y_te) + 1e-8))) * 100
+        residuals = y_te - y_pred
 
         diff = train_r2 - test_r2
         if diff > 0.15:
-            label, color = "OVERFITTING", "#f472b6"
+            fit_label, fit_color = "OVERFITTING", "#dc2626"
         elif test_r2 < 0.5:
-            label, color = "UNDERFITTING", "#f59e0b"
+            fit_label, fit_color = "UNDERFITTING", "#d97706"
         else:
-            label, color = "GOOD FIT", "#10b981"
-        c5.markdown(f'<div class="metric-card"><span class="metric-value" style="color:{color}; font-size:1rem;">{label}</span><span class="metric-label">Train-Test Δ: {diff:.3f}</span></div>', unsafe_allow_html=True)
+            fit_label, fit_color = "GOOD FIT", "#059669"
 
-        tab1, tab2 = st.tabs(["🎯 Predictions vs Actual", "📉 Residuals"])
+        cols = st.columns(6)
+        reg_metrics = [
+            ("Test R²",      f"{test_r2:.4f}",   "#0099cc"),
+            ("Train R²",     f"{train_r2:.4f}",  "#7c3aed"),
+            ("RMSE",         f"{rmse:.4f}",       "#db2777"),
+            ("MAE",          f"{mae:.4f}",         "#d97706"),
+            ("MAPE (%)",     f"{mape:.2f}%",       "#059669"),
+            (f"Δ {diff:.3f}", fit_label,          fit_color),
+        ]
+        for col, (lbl, val, clr) in zip(cols, reg_metrics):
+            col.markdown(
+                f'<div class="metric-card"><span class="metric-value" style="color:{clr}; font-size:1.05rem;">{val}</span>'
+                f'<span class="metric-label">{lbl}</span></div>',
+                unsafe_allow_html=True
+            )
+
+        tab1, tab2, tab3, tab4 = st.tabs([
+            "🎯 Actual vs Predicted", "📉 Residuals", "🔄 Train vs Test", "🎛️ Model-Specific"
+        ])
+
         with tab1:
             fig = go.Figure()
             fig.add_trace(go.Scatter(x=y_te, y=y_pred, mode='markers',
-                                      marker=dict(color='#00d4ff', size=6, opacity=0.7),
-                                      name='Predictions'))
-            mn, mx = min(y_te.min(), y_pred.min()), max(y_te.max(), y_pred.max())
-            fig.add_trace(go.Scatter(x=[mn,mx], y=[mn,mx],
-                                      line=dict(color='#f472b6', dash='dash'), name='Perfect Fit'))
-            fig.update_layout(title="Predicted vs Actual",
-                               xaxis_title="Actual", yaxis_title="Predicted",
-                               paper_bgcolor='rgba(0,0,0,0)',
-                               plot_bgcolor='rgba(10,14,26,0.8)',
-                               font=dict(color='#94a3b8'),
-                               xaxis=dict(gridcolor='#1e2d4a'),
-                               yaxis=dict(gridcolor='#1e2d4a'),
-                               legend=dict(bgcolor='rgba(0,0,0,0)'),
-                               margin=dict(l=0,r=0,t=40,b=0))
+                                     marker=dict(color='#0099cc', size=6, opacity=0.65),
+                                     name='Test Predictions'))
+            mn = min(float(y_te.min()), float(y_pred.min()))
+            mx = max(float(y_te.max()), float(y_pred.max()))
+            fig.add_trace(go.Scatter(x=[mn, mx], y=[mn, mx],
+                                     line=dict(color='#db2777', dash='dash', width=2),
+                                     name='Perfect Fit'))
+            fig.update_layout(**plot_layout("Actual vs Predicted"),
+                              xaxis_title="Actual", yaxis_title="Predicted")
             st.plotly_chart(fig, use_container_width=True)
 
         with tab2:
-            residuals = y_te - y_pred
-            fig = make_subplots(rows=1, cols=2,
-                                 subplot_titles=["Residuals vs Predicted", "Residuals Distribution"])
-            fig.add_trace(go.Scatter(x=y_pred, y=residuals, mode='markers',
-                                      marker=dict(color='#8b5cf6', size=5, opacity=0.7)), row=1, col=1)
-            fig.add_hline(y=0, line_dash="dash", line_color="#f472b6", row=1, col=1)
-            fig.add_trace(go.Histogram(x=residuals, nbinsx=30,
-                                        marker_color='#10b981', opacity=0.8), row=1, col=2)
-            fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',
-                               plot_bgcolor='rgba(10,14,26,0.8)',
-                               font=dict(color='#94a3b8'),
-                               showlegend=False,
-                               margin=dict(l=0,r=0,t=40,b=0))
-            fig.update_xaxes(gridcolor='#1e2d4a')
-            fig.update_yaxes(gridcolor='#1e2d4a')
-            st.plotly_chart(fig, use_container_width=True)
+            fig_res = make_subplots(rows=1, cols=2,
+                                    subplot_titles=["Residuals vs Predicted", "Residuals Distribution"])
+            fig_res.add_trace(go.Scatter(x=y_pred, y=residuals, mode='markers',
+                                         marker=dict(color='#7c3aed', size=5, opacity=0.7)), row=1, col=1)
+            fig_res.add_hline(y=0, line_dash="dash", line_color="#db2777", row=1, col=1)
+            fig_res.add_trace(go.Histogram(x=residuals, nbinsx=30,
+                                            marker_color='#059669', opacity=0.8), row=1, col=2)
+            fig_res.update_layout(**plot_layout(), showlegend=False)
+            fig_res.update_xaxes(gridcolor='#e2e8f0')
+            fig_res.update_yaxes(gridcolor='#e2e8f0')
+            st.plotly_chart(fig_res, use_container_width=True)
+
+        with tab3:
+            # sample-by-sample comparison (first 60 test points)
+            n_show = min(60, len(y_te))
+            idx_show = np.arange(n_show)
+            fig_tvt = go.Figure()
+            fig_tvt.add_trace(go.Scatter(x=idx_show, y=y_te[:n_show],
+                                         mode='lines+markers',
+                                         name='Actual',
+                                         line=dict(color='#0099cc', width=2),
+                                         marker=dict(size=5)))
+            fig_tvt.add_trace(go.Scatter(x=idx_show, y=y_pred[:n_show],
+                                         mode='lines+markers',
+                                         name='Predicted',
+                                         line=dict(color='#db2777', width=2, dash='dot'),
+                                         marker=dict(size=5, symbol='diamond')))
+            fig_tvt.update_layout(**plot_layout(f"Actual vs Predicted — first {n_show} test samples"),
+                                   xaxis_title="Sample Index",
+                                   yaxis_title="Value")
+            st.plotly_chart(fig_tvt, use_container_width=True)
+
+            # error bars version
+            errors = np.abs(residuals[:n_show])
+            fig_err = go.Figure()
+            fig_err.add_trace(go.Bar(x=idx_show, y=errors,
+                                     marker=dict(
+                                         color=errors,
+                                         colorscale=[[0,'#d1fae5'],[0.5,'#fef3c7'],[1,'#fee2e2']],
+                                         showscale=True,
+                                         colorbar=dict(title='|Error|')
+                                     ),
+                                     name='|Error|'))
+            fig_err.update_layout(**plot_layout(f"|Absolute Error| per Test Sample"),
+                                   xaxis_title="Sample Index",
+                                   yaxis_title="|Error|")
+            st.plotly_chart(fig_err, use_container_width=True)
+
+        with tab4:
+            st.markdown(f"#### Model: `{model_name}`")
+
+            # ── Linear Regression: coefficients ───────────────────
+            if "Linear" in model_name:
+                section_card("Feature Coefficients", "📏")
+                feats = st.session_state.feature_selected_cols or st.session_state.selected_features
+                coef_df = pd.DataFrame({
+                    "Feature": feats,
+                    "Coefficient": model.coef_
+                }).sort_values("Coefficient", key=abs, ascending=True)
+                fig_coef = go.Figure(go.Bar(
+                    y=coef_df["Feature"], x=coef_df["Coefficient"], orientation='h',
+                    marker=dict(color=['#db2777' if v < 0 else '#059669' for v in coef_df["Coefficient"]]),
+                    text=[f"{v:.4f}" for v in coef_df["Coefficient"]],
+                    textposition='outside', textfont=dict(color='#1e293b', size=10)
+                ))
+                fig_coef.update_layout(**plot_layout("Feature Coefficients (Linear Regression)"),
+                                       height=max(300, len(feats)*32))
+                st.plotly_chart(fig_coef, use_container_width=True)
+                st.info(f"Intercept: **{model.intercept_:.4f}**")
+
+            # ── SVR: support vectors ───────────────────────────────
+            elif "SVR" in model_name or ("SVM" in model_name and not is_cls):
+                section_card("SVR Support Vector Distribution", "⚔️")
+                from sklearn.decomposition import PCA
+                pca2 = PCA(n_components=2)
+                X_2d = pca2.fit_transform(X_te)
+                df_svr = pd.DataFrame(X_2d, columns=["PC1", "PC2"])
+                df_svr["Actual"]    = y_te
+                df_svr["Predicted"] = y_pred
+                df_svr["|Error|"]   = np.abs(residuals)
+                fig_svr = px.scatter(df_svr, x="PC1", y="PC2",
+                                     color="|Error|",
+                                     color_continuous_scale=[[0,'#d1fae5'],[0.5,'#fef3c7'],[1,'#fee2e2']],
+                                     title="SVR — Test Set (colour = |error|)",
+                                     size=df_svr["|Error|"].clip(upper=df_svr["|Error|"].quantile(0.95))+0.5,
+                                     opacity=0.8)
+                fig_svr.update_layout(**plot_layout())
+                st.plotly_chart(fig_svr, use_container_width=True)
+                st.info(f"Support vectors: **{model.n_support_[0]}**")
+
+            # ── Random Forest: importances ─────────────────────────
+            elif "Random Forest" in model_name:
+                section_card("Feature Importances (MDI)", "🌲")
+                feats = st.session_state.feature_selected_cols or st.session_state.selected_features
+                imp = pd.Series(model.feature_importances_, index=feats).sort_values(ascending=True)
+                fig_imp = go.Figure(go.Bar(
+                    y=imp.index, x=imp.values, orientation='h',
+                    marker=dict(
+                        color=imp.values,
+                        colorscale=[[0,'#e2e8f0'],[0.6,'#7c3aed'],[1,'#059669']],
+                        showscale=False
+                    ),
+                    text=[f"{v:.4f}" for v in imp.values],
+                    textposition='outside',
+                    textfont=dict(color='#1e293b', size=10)
+                ))
+                fig_imp.update_layout(**plot_layout("Feature Importances"),
+                                      height=max(300, len(feats)*32))
+                st.plotly_chart(fig_imp, use_container_width=True)
+
+                with st.expander("🌳 View a Single Decision Tree (depth ≤ 3)"):
+                    try:
+                        from sklearn.tree import export_text
+                        tree_ = model.estimators_[0]
+                        tree_text = export_text(tree_, feature_names=list(feats), max_depth=3)
+                        st.code(tree_text, language="text")
+                    except Exception as e:
+                        st.warning(f"Could not render tree: {e}")
+
+            # ── KNN Regressor: distance distribution ──────────────
+            elif "K-Nearest" in model_name:
+                section_card("Neighbour Distance Distribution", "🔵")
+                dists, _ = model.kneighbors(X_te)
+                mean_dists = dists.mean(axis=1)
+                fig_knn = go.Figure()
+                fig_knn.add_trace(go.Scatter(x=mean_dists, y=np.abs(residuals),
+                                             mode='markers',
+                                             marker=dict(color='#0099cc', size=6, opacity=0.7),
+                                             name='|Error| vs Mean Dist'))
+                fig_knn.update_layout(**plot_layout(f"Mean Neighbour Distance vs |Error|"),
+                                      xaxis_title="Mean Neighbour Distance",
+                                      yaxis_title="|Residual|")
+                st.plotly_chart(fig_knn, use_container_width=True)
 
     if nav_buttons(next_label="Hyperparameter Tuning →", next_key="met_next"):
         st.session_state.step = 9
         st.rerun()
 
 
-# ─── STEP 9: Hyperparameter Tuning ───────────────────────────────────────────
 def step_hyperparameter_tuning():
     st.markdown("""
     <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1.5rem;">
@@ -1569,31 +2068,18 @@ def step_hyperparameter_tuning():
     X_te = st.session_state.X_test
     y_te = st.session_state.y_test
 
-    # Build param grid based on model
     def get_param_grid():
         if "SVM" in model_name:
-            return {
-                "C": [0.1, 1, 10, 100],
-                "kernel": ["linear", "rbf", "poly"],
-                "gamma": ["scale", "auto"]
-            }
+            return {"C": [0.1, 1, 10, 100], "kernel": ["linear", "rbf", "poly"], "gamma": ["scale", "auto"]}
         elif "Random Forest" in model_name:
-            return {
-                "n_estimators": [50, 100, 200],
-                "max_depth": [None, 5, 10, 20],
-                "min_samples_split": [2, 5, 10]
-            }
+            return {"n_estimators": [50, 100, 200], "max_depth": [None, 5, 10, 20], "min_samples_split": [2, 5, 10]}
         elif "Linear" in model_name or "Logistic" in model_name:
             if is_cls:
                 return {"C": [0.01, 0.1, 1, 10, 100], "solver": ["lbfgs", "liblinear"]}
             else:
                 return {"fit_intercept": [True, False], "positive": [False, True]}
-        else:  # KNN
-            return {
-                "n_neighbors": [3, 5, 7, 10, 15],
-                "weights": ["uniform", "distance"],
-                "metric": ["minkowski", "euclidean", "manhattan"]
-            }
+        else:
+            return {"n_neighbors": [3, 5, 7, 10, 15], "weights": ["uniform", "distance"], "metric": ["minkowski", "euclidean", "manhattan"]}
 
     def build_base_model():
         if is_cls:
@@ -1634,24 +2120,26 @@ def step_hyperparameter_tuning():
     with col3:
         if search_method == "Randomized Search":
             n_iter = st.slider("# Iterations", 5, 50, 20)
+        else:
+            n_iter = None
 
     scoring = 'accuracy' if is_cls else 'r2'
 
     section_card("Parameter Grid", "🔧")
     for param, values in param_grid.items():
-        st.markdown(f'<div style="color:#94a3b8; font-size:0.82rem; margin:3px 0; font-family:Space Mono,monospace;"><span style="color:#00d4ff;">{param}</span>: {values}</div>', unsafe_allow_html=True)
+        st.markdown(f'<div style="color:#475569; font-size:0.82rem; margin:3px 0; font-family:Space Mono,monospace;"><span style="color:#0099cc; font-weight:700;">{param}</span>: {values}</div>', unsafe_allow_html=True)
 
     if st.button("🔬 Start Tuning", key="tune_btn", type="primary"):
-        with st.spinner("Running hyperparameter search... this may take a moment."):
+        with st.spinner("Running hyperparameter search..."):
             start = time.time()
             base = build_base_model()
             if search_method == "Grid Search":
                 searcher = GridSearchCV(base, param_grid, cv=cv_k, scoring=scoring,
-                                         n_jobs=-1, verbose=0, return_train_score=True)
+                                        n_jobs=-1, verbose=0, return_train_score=True)
             else:
                 searcher = RandomizedSearchCV(base, param_grid, cv=cv_k, scoring=scoring,
-                                               n_iter=n_iter, random_state=42, n_jobs=-1,
-                                               verbose=0, return_train_score=True)
+                                              n_iter=n_iter, random_state=42, n_jobs=-1,
+                                              verbose=0, return_train_score=True)
             searcher.fit(X_tr, y_tr)
             elapsed = time.time() - start
 
@@ -1659,8 +2147,7 @@ def step_hyperparameter_tuning():
         best_model = searcher.best_estimator_
         y_pred_best = best_model.predict(X_te)
 
-        # Original model performance
-        orig_model = st.session_state.model
+        orig_model  = st.session_state.model
         y_pred_orig = orig_model.predict(X_te)
 
         if is_cls:
@@ -1674,23 +2161,19 @@ def step_hyperparameter_tuning():
 
         improvement = best_score - orig_score
 
-        # Results display
         section_card("Tuning Results", "🏆")
         c1, c2, c3, c4 = st.columns(4)
         c1.markdown(f'<div class="metric-card"><span class="metric-value">{orig_score:.4f}</span><span class="metric-label">Original {metric_name}</span></div>', unsafe_allow_html=True)
-        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#10b981">{best_score:.4f}</span><span class="metric-label">Tuned {metric_name}</span></div>', unsafe_allow_html=True)
-        imp_color = "#10b981" if improvement >= 0 else "#f472b6"
+        c2.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#059669">{best_score:.4f}</span><span class="metric-label">Tuned {metric_name}</span></div>', unsafe_allow_html=True)
+        imp_color = "#059669" if improvement >= 0 else "#dc2626"
         c3.markdown(f'<div class="metric-card"><span class="metric-value" style="color:{imp_color}">{"+" if improvement>=0 else ""}{improvement:.4f}</span><span class="metric-label">Improvement</span></div>', unsafe_allow_html=True)
-        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#f59e0b">{elapsed:.1f}s</span><span class="metric-label">Search Time</span></div>', unsafe_allow_html=True)
+        c4.markdown(f'<div class="metric-card"><span class="metric-value" style="color:#d97706">{elapsed:.1f}s</span><span class="metric-label">Search Time</span></div>', unsafe_allow_html=True)
 
-        # Best params
-        st.markdown('<div style="margin:1rem 0;">', unsafe_allow_html=True)
         section_card("Best Parameters Found", "✨")
         bp_cols = st.columns(len(st.session_state.best_params))
         for i, (k, v) in enumerate(st.session_state.best_params.items()):
-            bp_cols[i].markdown(f'<div class="metric-card"><span class="metric-value" style="font-size:1.1rem; color:#f472b6">{v}</span><span class="metric-label">{k}</span></div>', unsafe_allow_html=True)
+            bp_cols[i].markdown(f'<div class="metric-card"><span class="metric-value" style="font-size:1.1rem; color:#db2777">{v}</span><span class="metric-label">{k}</span></div>', unsafe_allow_html=True)
 
-        # CV Results visualization
         cv_df = pd.DataFrame(searcher.cv_results_)
         cv_df = cv_df.sort_values('rank_test_score').head(15)
 
@@ -1699,10 +2182,10 @@ def step_hyperparameter_tuning():
             x=list(range(len(cv_df))),
             y=cv_df['mean_test_score'],
             error_y=dict(type='data', array=cv_df['std_test_score'], visible=True,
-                         color='rgba(255,255,255,0.3)'),
+                         color='rgba(0,0,0,0.15)'),
             marker=dict(
                 color=cv_df['mean_test_score'],
-                colorscale=[[0,'#334155'],[0.5,'#8b5cf6'],[1,'#00d4ff']],
+                colorscale=[[0,'#e2e8f0'],[0.5,'#7c3aed'],[1,'#0099cc']],
                 showscale=False
             ),
             name='Test Score'
@@ -1712,19 +2195,12 @@ def step_hyperparameter_tuning():
                 x=list(range(len(cv_df))),
                 y=cv_df['mean_train_score'],
                 mode='lines+markers',
-                line=dict(color='#10b981', dash='dot'),
+                line=dict(color='#059669', dash='dot'),
                 name='Train Score'
             ))
-        fig.update_layout(
-            title=f"Top {len(cv_df)} Parameter Combinations (sorted by rank)",
-            paper_bgcolor='rgba(0,0,0,0)',
-            plot_bgcolor='rgba(10,14,26,0.8)',
-            font=dict(color='#94a3b8'),
-            xaxis=dict(gridcolor='#1e2d4a', title="Parameter Set Rank"),
-            yaxis=dict(gridcolor='#1e2d4a', title=f"CV {metric_name}"),
-            legend=dict(bgcolor='rgba(0,0,0,0)'),
-            margin=dict(l=0,r=0,t=40,b=0)
-        )
+        fig.update_layout(**plot_layout(f"Top {len(cv_df)} Parameter Combinations"))
+        fig.update_xaxes(title="Parameter Set Rank")
+        fig.update_yaxes(title=f"CV {metric_name}")
         st.plotly_chart(fig, use_container_width=True)
 
         if improvement > 0:
@@ -1732,14 +2208,13 @@ def step_hyperparameter_tuning():
                 st.session_state.model = best_model
                 st.success("✓ Model updated with best parameters!")
 
-        # Summary card
         st.markdown(f"""
-        <div style="background:linear-gradient(135deg, rgba(0,212,255,0.05), rgba(139,92,246,0.05)); 
-                    border:1px solid rgba(0,212,255,0.2); border-radius:12px; padding:1.5rem; margin-top:1rem; text-align:center;">
-            <div style="font-family:'Orbitron',monospace; color:#e2e8f0; font-size:1rem; font-weight:700; letter-spacing:0.1em;">
-                🎉 PIPELINE COMPLETE
+        <div style="background:linear-gradient(135deg, #e0f7ff, #ede9fe);
+                    border:1px solid #a5b4fc; border-radius:12px; padding:1.5rem; margin-top:1rem; text-align:center;">
+            <div style="font-family:'Orbitron',monospace; color:#1e293b; font-size:1rem; font-weight:700; letter-spacing:0.1em;">
+                🎉 Pipeline Complete!
             </div>
-            <p style="color:#64748b; font-size:0.85rem; margin-top:0.5rem;">
+            <p style="color:#475569; font-size:0.85rem; margin-top:0.5rem;">
                 Your ML pipeline from data input to hyperparameter tuning is complete.
             </p>
             <div style="margin-top:0.8rem;">
@@ -1757,17 +2232,16 @@ def step_hyperparameter_tuning():
         st.rerun()
 
 
-# ─── Main App ─────────────────────────────────────────────────────────────────
 def main():
-    # Header
     st.markdown("""
     <div class="hero-header">
-        <div class="hero-title">⚗️ ML PIPELINE STUDIO</div>
+        <div class="hero-title">⚗️ ML Pipeline Studio</div>
         <div class="hero-sub">End-to-End Machine Learning Orchestration</div>
     </div>
     """, unsafe_allow_html=True)
 
     render_pipeline_bar()
+    st.markdown('<hr style="margin:0 0 1.5rem 0;">', unsafe_allow_html=True)
 
     step = st.session_state.step
 
